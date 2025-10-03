@@ -16,7 +16,7 @@
     "dropdowns": [
       {
         "dropdown": "Account Creation",
-        "icon": "book-open",
+        "icon": "library",
         "pages": [
           "account-creation/choose-entity-type",
           "account-creation/add-website-details",
