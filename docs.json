@@ -84,7 +84,7 @@
       },
       {
         "group": "Settings",
-        "icon": "cog",
+        "icon": "settings-2",
         "pages": [
           "settings/entity-settings",
           "settings/my-account",
