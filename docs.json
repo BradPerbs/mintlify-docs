@@ -35,7 +35,7 @@
       },
       {
         "group": "Prompts",
-        "icon": "library",
+        "icon": "rows-4",
         "pages": [
           "prompts/add-prompts",
           "prompts/edit-prompts",
