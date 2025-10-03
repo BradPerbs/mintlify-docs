@@ -17,7 +17,7 @@
       {
         "group": "Account Creation",
         "icon": "library",
-        "expanded": true,
+        "expanded": false,
         "pages": [
           "account-creation/choose-entity-type",
           "account-creation/add-website-details",
