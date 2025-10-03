@@ -46,14 +46,14 @@
       },
       {
         "group": "Mentions",
-        "icon": "list",
+        "icon": "/icons/list.svg",
         "pages": [
           "mentions/about-mentions"
         ]
       },
       {
         "group": "Citations",
-        "icon": "list-filter",
+        "icon": "/icons/list-check.svg",
         "pages": [
           "citations/top-citations",
           "citations/total-domains",
