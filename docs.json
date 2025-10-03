@@ -16,7 +16,7 @@
     "groups": [
       {
         "group": "Account Creation",
-        "icon": "",
+        "icon": "icons/user.svg",
         "pages": [
           "account-creation/choose-entity-type",
           "account-creation/add-website-details",
