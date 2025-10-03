@@ -64,7 +64,7 @@
       },
       {
         "group": "Competitors",
-        "icon": "hat-glasses",
+        "icon": "workflow",
         "pages": [
           "competitors/manage-competitors",
           "competitors/competitors-leaderboard"
