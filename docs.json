@@ -25,7 +25,7 @@
       },
       {
         "group": "Dashboard",
-        "icon": "layout-dashboard",
+        "icon": "monitor-cog",
         "pages": [
           "dashboard/visibility-trend",
           "dashboard/visibility-leaderboard",
