@@ -53,7 +53,7 @@
       },
       {
         "group": "Citations",
-        "icon": "list-checks",
+        "icon": "list-filter",
         "pages": [
           "citations/top-citations",
           "citations/total-domains",
