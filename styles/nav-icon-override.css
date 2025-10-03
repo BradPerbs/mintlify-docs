@@ -1,26 +1,11 @@
-/* Remove the rounded “chip” behind nav icons (light + dark) */
-.sidebar [class*="icon"],
-.sidebar [class*="Icon"],
-.sidebar [class*="nav"] [class*="icon"],
-.sidebar :is(svg, img)[width][height] {
-  background: transparent !important;
-  box-shadow: none !important;
-}
+.dark\:bg-primary-light:is(.dark *) {
+    --tw-bg-opacity: 1;
+    background-color
+Sets the background color of an element.
 
-/* Ensure dark mode doesn't add it back */
-html.dark .sidebar [class*="icon"],
-html.dark .sidebar :is(svg, img)[width][height] {
-  background: transparent !important;
-  box-shadow: none !important;
-}
+Widely available across major browsers (Baseline since January 2018)
+Learn more
 
-/* Keep the glyph visible; use your preferred colors */
-.sidebar svg { color: #4B5563; }            /* light */
-html.dark .sidebar svg { color: #E5E7EB; }  /* dark */
-
-/* Optional: remove any subtle border/pill radius the theme adds */
-.sidebar [class*="icon"] {
-  border: 0 !important;
-  border-radius: 0 !important; /* or keep the rounding if you like it */
-  padding: 0 !important;        /* tighten spacing if the chip used padding */
+Don't show
+: rgb(0 0 0);
 }
