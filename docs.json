@@ -13,9 +13,9 @@
     "dark": "#000000"
   },
   "navigation": {
-    "groups": [
+    "dropdowns": [
       {
-        "group": "Account Creation",
+        "dropdown": "Account Creation",
         "icon": "/icons/user.svg",
         "pages": [
           "account-creation/choose-entity-type",
@@ -24,7 +24,7 @@
         ]
       },
       {
-        "group": "Dashboard",
+        "dropdown": "Dashboard",
         "icon": "/icons/layout-dashboard.svg",
         "pages": [
           "dashboard/visibility-trend",
@@ -34,7 +34,7 @@
         ]
       },
       {
-        "group": "Prompts",
+        "dropdown": "Prompts",
         "icon": "/icons/pencil.svg",
         "pages": [
           "prompts/add-prompts",
@@ -45,14 +45,14 @@
         ]
       },
       {
-        "group": "Mentions",
+        "dropdown": "Mentions",
         "icon": "/icons/list.svg",
         "pages": [
           "mentions/about-mentions"
         ]
       },
       {
-        "group": "Citations",
+        "dropdown": "Citations",
         "icon": "/icons/list-check.svg",
         "pages": [
           "citations/top-citations",
@@ -63,7 +63,7 @@
         ]
       },
       {
-        "group": "Competitors",
+        "dropdown": "Competitors",
         "icon": "/icons/group.svg",
         "pages": [
           "competitors/manage-competitors",
@@ -71,7 +71,7 @@
         ]
       },
       {
-        "group": "LLM Traffic",
+        "dropdown": "LLM Traffic",
         "icon": "/icons/chart-line.svg",
         "pages": [
           "llm-traffic/custom-html",
@@ -83,7 +83,7 @@
         ]
       },
       {
-        "group": "Settings",
+        "dropdown": "Settings",
         "icon": "/icons/settings.svg",
         "pages": [
           "settings/entity-settings",
@@ -95,7 +95,7 @@
         ]
       },
       {
-        "group": "Help Center",
+        "dropdown": "Help Center",
         "icon": "/icons/message-circle-question-mark.svg",
         "pages": [
           "help-center/about-help-center"
