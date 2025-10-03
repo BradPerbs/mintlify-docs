@@ -53,7 +53,7 @@
       },
       {
         "group": "Citations",
-        "icon": "library",
+        "icon": "list-checks",
         "pages": [
           "citations/top-citations",
           "citations/total-domains",
@@ -64,7 +64,7 @@
       },
       {
         "group": "Competitors",
-        "icon": "library",
+        "icon": "hat-glasses",
         "pages": [
           "competitors/manage-competitors",
           "competitors/competitors-leaderboard"
@@ -72,7 +72,7 @@
       },
       {
         "group": "LLM Traffic",
-        "icon": "library",
+        "icon": "chart-no-axes-combined",
         "pages": [
           "llm-traffic/custom-html",
           "llm-traffic/google-analytics",
@@ -84,7 +84,7 @@
       },
       {
         "group": "Settings",
-        "icon": "library",
+        "icon": "settings",
         "pages": [
           "settings/entity-settings",
           "settings/my-account",
@@ -96,7 +96,7 @@
       },
       {
         "group": "Help Center",
-        "icon": "library",
+        "icon": "message-circle-question-mark",
         "pages": [
           "help-center/about-help-center"
         ]
