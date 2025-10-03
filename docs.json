@@ -1,37 +1,31 @@
 {
-  "$schema": "https://mintlify.com/schema.json",
+  "$schema": "https://www.mintlify.com/docs.json",
   "name": "Your Product Name",
   "theme": "mint",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
+  "logo": { "dark": "/logo/dark.svg", "light": "/logo/light.svg" },
   "favicon": "/favicon.png",
-  "colors": {
-    "primary": "#4D4D4D",
-    "light": "#808080",
-    "dark": "#000000"
-  },
+  "colors": { "primary": "#4D4D4D", "light": "#808080", "dark": "#000000" },
   "css": ["/styles/nav-icon-override.css"],
+
   "navigation": {
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting started",
-        "icon": "play",
-        "expanded": true,
-        "pages": [
-          "quickstart",
+        "tab": "Docs",
+        "groups": [
           {
-            "group": "Editing",
-            "icon": "pencil",
+            "group": "Getting started",
+            "icon": "play",
+            "expanded": false,
             "pages": [
+              "quickstart",
               "quickstart/installation",
-              "quickstart/editor"
+              "quickstart/faq"
             ]
           }
         ]
       }
     ],
+
     "dropdowns": [
       {
         "dropdown": "Account Creation",
@@ -66,9 +60,7 @@
       {
         "dropdown": "Mentions",
         "icon": "/icons/list.svg",
-        "pages": [
-          "mentions/about-mentions"
-        ]
+        "pages": ["mentions/about-mentions"]
       },
       {
         "dropdown": "Citations",
@@ -116,12 +108,11 @@
       {
         "dropdown": "Help Center",
         "icon": "/icons/message-circle-question-mark.svg",
-        "pages": [
-          "help-center/about-help-center"
-        ]
+        "pages": ["help-center/about-help-center"]
       }
     ]
   },
+
   "footerSocials": {
     "linkedin": "https://www.linkedin.com/company/geogenai/",
     "twitter": "https://x.com/Geogenai",
