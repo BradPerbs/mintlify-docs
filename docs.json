@@ -12,6 +12,7 @@
     "light": "#808080",
     "dark": "#000000"
   },
+  "css": ["/styles/nav-icon-override.css"],
   "navigation": {
     "dropdowns": [
       {
