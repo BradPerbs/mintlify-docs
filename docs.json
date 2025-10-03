@@ -15,12 +15,14 @@
   "navigation": {
     "dropdowns": [
       {
-        "dropdown": "Quick Start",
+        "dropdown": "Getting Started",
         "icon": "/icons/rocket.svg",
         "pages": [
-          "account-creation/choose-entity-type",
-          "account-creation/add-website-details",
-          "account-creation/generated-prompts"
+          "quick-start/welcome",
+          "quick-start/quickstart",
+          "quick-start/prompts-configuration",
+          "quick-start/competitors-selection",
+          "quick-start/prompts-configuration"
         ]
       },
       {
