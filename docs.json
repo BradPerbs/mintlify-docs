@@ -13,9 +13,9 @@
     "dark": "#000000"
   },
   "navigation": {
-    "groups": [
+    "dropdowns": [
       {
-        "group": "Account Creation",
+        "dropdown": "Account Creation",
         "pages": [
           "account-creation/choose-entity-type",
           "account-creation/add-website-details",
@@ -23,7 +23,7 @@
         ]
       },
       {
-        "group": "Dashboard",
+        "dropdown": "Dashboard",
         "pages": [
           "dashboard/visibility-trend",
           "dashboard/visibility-leaderboard",
@@ -32,7 +32,7 @@
         ]
       },
       {
-        "group": "Prompts",
+        "dropdown": "Prompts",
         "pages": [
           "prompts/add-prompts",
           "prompts/edit-prompts",
@@ -42,13 +42,13 @@
         ]
       },
       {
-        "group": "Mentions",
+        "dropdown": "Mentions",
         "pages": [
           "mentions/about-mentions"
         ]
       },
       {
-        "group": "Citations",
+        "dropdown": "Citations",
         "pages": [
           "citations/top-citations",
           "citations/total-domains",
@@ -58,14 +58,14 @@
         ]
       },
       {
-        "group": "Competitors",
+        "dropdown": "Competitors",
         "pages": [
           "competitors/manage-competitors",
           "competitors/competitors-leaderboard"
         ]
       },
       {
-        "group": "LLM Traffic",
+        "dropdown": "LLM Traffic",
         "pages": [
           "llm-traffic/custom-html",
           "llm-traffic/google-analytics",
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "group": "Settings",
+        "dropdown": "Settings",
         "pages": [
           "settings/entity-settings",
           "settings/my-account",
@@ -87,7 +87,7 @@
         ]
       },
       {
-        "group": "Help Center",
+        "dropdown": "Help Center",
         "pages": [
           "help-center/about-help-center"
         ]
