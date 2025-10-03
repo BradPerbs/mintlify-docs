@@ -16,7 +16,7 @@
     "groups": [
       {
         "group": "Account Creation",
-        "icon": "icons/user.svg",
+        "icon": "icons/user",
         "pages": [
           "account-creation/choose-entity-type",
           "account-creation/add-website-details",
@@ -25,7 +25,7 @@
       },
       {
         "group": "Dashboard",
-        "icon": "icons/layout-dashboard.svg",
+        "icon": "icons/layout-dashboard",
         "pages": [
           "dashboard/visibility-trend",
           "dashboard/visibility-leaderboard",
