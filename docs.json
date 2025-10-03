@@ -84,7 +84,7 @@
       },
       {
         "group": "Settings",
-        "icon": "settings-2",
+        "icon": "swrench",
         "pages": [
           "settings/entity-settings",
           "settings/my-account",
