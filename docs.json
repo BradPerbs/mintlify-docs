@@ -46,7 +46,7 @@
       },
       {
         "group": "Mentions",
-        "icon": "library",
+        "icon": "list",
         "pages": [
           "mentions/about-mentions"
         ]
