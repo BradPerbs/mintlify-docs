@@ -18,11 +18,17 @@
       {
         "group": "Getting started",
         "icon": "play",
-        "expanded": false,
+        "expanded": true,
         "pages": [
           "quickstart",
-          "quickstart/installation",
-          "quickstart/faq"
+          {
+            "group": "Editing",
+            "icon": "pencil",
+            "pages": [
+              "quickstart/installation",
+              "quickstart/editor"
+            ]
+          }
         ]
       }
     ],
