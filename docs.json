@@ -35,6 +35,7 @@
         "group": "Prompts",
         "pages": [
           "prompts/add-prompts",
+          "prompts/edit-prompts",
           "prompts/suggest-prompts",
           "prompts/bulk-upload",
           "prompts/tags"
