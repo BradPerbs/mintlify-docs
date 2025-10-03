@@ -64,7 +64,7 @@
       },
       {
         "group": "Competitors",
-        "icon": "workflow",
+        "icon": "/icons/group.svg",
         "pages": [
           "competitors/manage-competitors",
           "competitors/competitors-leaderboard"
@@ -72,7 +72,7 @@
       },
       {
         "group": "LLM Traffic",
-        "icon": "chart-area",
+        "icon": "/icons/chart-line.svg",
         "pages": [
           "llm-traffic/custom-html",
           "llm-traffic/google-analytics",
