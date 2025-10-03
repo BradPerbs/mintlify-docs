@@ -72,7 +72,7 @@
       },
       {
         "group": "LLM Traffic",
-        "icon": "chart-no-axes-combined",
+        "icon": "chart-area",
         "pages": [
           "llm-traffic/custom-html",
           "llm-traffic/google-analytics",
