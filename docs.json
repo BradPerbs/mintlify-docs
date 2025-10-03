@@ -14,6 +14,18 @@
   },
   "css": ["/styles/nav-icon-override.css"],
   "navigation": {
+    "groups": [
+      {
+        "group": "Getting started",
+        "icon": "play",
+        "expanded": false,
+        "pages": [
+          "quickstart",
+          "quickstart/installation",
+          "quickstart/faq"
+        ]
+      }
+    ],
     "dropdowns": [
       {
         "dropdown": "Account Creation",
