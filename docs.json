@@ -96,7 +96,7 @@
       },
       {
         "group": "Help Center",
-        "icon": "message-circle-question-mark",
+        "icon": "<MessageCircleQuestionMark />",
         "pages": [
           "help-center/about-help-center"
         ]
