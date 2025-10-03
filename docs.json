@@ -84,7 +84,7 @@
       },
       {
         "group": "Settings",
-        "icon": "swrench",
+        "icon": "/icons/settings.svg",
         "pages": [
           "settings/entity-settings",
           "settings/my-account",
@@ -96,7 +96,7 @@
       },
       {
         "group": "Help Center",
-        "icon": "message-circle-question-mark",
+        "icon": "/icons/message-circle-question-mark.svg",
         "pages": [
           "help-center/about-help-center"
         ]
