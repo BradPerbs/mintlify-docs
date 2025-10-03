@@ -17,10 +17,9 @@
       {
         "group": "Account Creation",
         "pages": [
-          "account-creation/visibility-trend",
-          "account-creation/visibility-leaderboard",
-          "account-creation/recent-mentions",
-          "account-creation/average-position-by-day"
+          "account-creation/choose-entity-type",
+          "account-creation/add-website-details",
+          "account-creation/generated-prompts"
         ]
       },
       {
