@@ -1,122 +1,103 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Your Product Name",
   "theme": "mint",
-  "name": "Mint Starter Kit",
-  "colors": {
-    "primary": "#FFF",
-    "light": "#FFF",
-    "dark": "#000"
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#4D4D4D",
+    "light": "#808080",
+    "dark": "#000000"
+  },
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
+        "group": "Account Creation",
+        "pages": [
+          "account-creation/visibility-trend",
+          "account-creation/visibility-leaderboard",
+          "account-creation/recent-mentions",
+          "account-creation/average-position-by-day"
         ]
       },
       {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
+        "group": "Dashboard",
+        "pages": [
+          "dashboard/visibility-trend",
+          "dashboard/visibility-leaderboard",
+          "dashboard/recent-mentions",
+          "dashboard/average-position-by-day"
+        ]
+      },
+      {
+        "group": "Prompts",
+        "pages": [
+          "prompts/add-prompts",
+          "prompts/suggest-prompts",
+          "prompts/bulk-upload",
+          "prompts/tags"
+        ]
+      },
+      {
+        "group": "Mentions",
+        "pages": [
+          "mentions/additional-details"
+        ]
+      },
+      {
+        "group": "Citations",
+        "pages": [
+          "citations/top-citations",
+          "citations/total-domains",
+          "citations/unique-urls",
+          "citations/top-citations-categories",
+          "citations/most-used-citations"
+        ]
+      },
+      {
+        "group": "Competitors",
+        "pages": [
+          "competitors/manage-competitors",
+          "competitors/competitors-leaderboard"
+        ]
+      },
+      {
+        "group": "LLM Traffic",
+        "pages": [
+          "llm-traffic/custom-html",
+          "llm-traffic/google-analytics",
+          "llm-traffic/simple-analytics",
+          "llm-traffic/cloudflare",
+          "llm-traffic/wordpress",
+          "llm-traffic/whmcs"
+        ]
+      },
+      {
+        "group": "Settings",
+        "pages": [
+          "settings/entity-settings",
+          "settings/my-account",
+          "settings/team-manager",
+          "settings/credit-usage",
+          "settings/security",
+          "settings/style-and-language"
+        ]
+      },
+      {
+        "group": "Help Center",
+        "pages": [
+          "help-center"
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
+    ]
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+  "footerSocials": {
+    "linkedin": "https://www.linkedin.com/company/geogenai/",
+    "twitter": "https://x.com/Geogenai",
+    "facebook": "https://www.facebook.com/geogenai/",
+    "instagram": "https://www.instagram.com/geogen.io/"
   }
 }
