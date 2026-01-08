@@ -77,19 +77,65 @@
                     },
                     {
                         "group": "Workspace",
-                        "openapi": "openapi.json tag=Workspace"
+                        "pages": [
+                            {
+                                "openapi": "openapi.json GET /workspace"
+                            },
+                            {
+                                "openapi": "openapi.json GET /workspace/members"
+                            },
+                            {
+                                "openapi": "openapi.json GET /workspace/tags"
+                            }
+                        ]
                     },
                     {
                         "group": "Entities",
-                        "openapi": "openapi.json tag=Entities"
+                        "pages": [
+                            {
+                                "openapi": "openapi.json GET /entities"
+                            },
+                            {
+                                "openapi": "openapi.json POST /entities"
+                            },
+                            {
+                                "openapi": "openapi.json GET /entities/prompts"
+                            },
+                            {
+                                "openapi": "openapi.json POST /entities/addprompt"
+                            },
+                            {
+                                "openapi": "openapi.json DELETE /entities/deleteprompt"
+                            },
+                            {
+                                "openapi": "openapi.json GET /entities/citations"
+                            }
+                        ]
                     },
                     {
                         "group": "Analytics",
-                        "openapi": "openapi.json tag=Analytics"
+                        "pages": [
+                            {
+                                "openapi": "openapi.json GET /competitors"
+                            },
+                            {
+                                "openapi": "openapi.json GET /responses"
+                            },
+                            {
+                                "openapi": "openapi.json GET /trends/visibility"
+                            },
+                            {
+                                "openapi": "openapi.json GET /trends/sentiment"
+                            }
+                        ]
                     },
                     {
                         "group": "Models",
-                        "openapi": "openapi.json tag=Models"
+                        "pages": [
+                            {
+                                "openapi": "openapi.json GET /models"
+                            }
+                        ]
                     }
                 ]
             }
