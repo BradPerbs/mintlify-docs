@@ -1,4 +1,52 @@
 ---
 title: 'Introduction'
+description: 'Welcome to the Geogen API'
 ---
 
+## Overview
+
+The Geogen API allows you to programmatically access your LLM visibility data, manage entities, and track AI mentions.
+
+## Base URL
+
+All API requests should be made to:
+
+```
+https://api.geogen.io/
+```
+### Obtaining an API Key
+
+1. Navigate to **Settings** → **Workspaces** → **Your Workspace** → **API Keys** in your dashboard
+2. Click **Create API Key**
+3. Give your key a descriptive name
+4. Copy and securely store your API key - it will only be shown once
+
+## Quick Start
+
+1. Add the key to your request headers
+2. Make your first API call
+
+```bash
+curl -X GET "https://api.geogen.io/v1/entities" \
+  -H "Authorization: Bearer wsk_your_api_key"
+```
+
+## Response Format
+
+All responses are returned in JSON format:
+
+```json
+{
+  "success": true,
+  "data": [...],
+  "pagination": {
+    "total": 100,
+    "limit": 20,
+    "offset": 0
+  }
+}
+```
+
+## Need Help?
+
+Contact us at [contact@geogen.io](mailto:contact@geogen.io)
