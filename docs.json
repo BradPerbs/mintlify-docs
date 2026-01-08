@@ -65,7 +65,9 @@
           },
           {
             "group": "Endpoints",
-            "pages": []
+            "pages": [
+              "public-apis/endpoints/untitled-page"
+            ]
           }
         ]
       }
