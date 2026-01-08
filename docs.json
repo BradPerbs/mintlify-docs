@@ -17,16 +17,31 @@
       {
         "tab": "Documentation",
         "icon": "newspaper",
-        "pages": [
-          "/index",
-          "quick-start/quickstart",
-          "quick-start/prompts-configuration",
-          "quick-start/competitors-selection"
+        "groups": [
+          {
+            "group": "General",
+            "pages": [
+              "/index",
+              "quick-start/quickstart",
+              "quick-start/prompts-configuration",
+              "quick-start/competitors-selection"
+            ]
+          }
         ]
       },
       {
         "tab": "Public APIs",
-        "icon": "code"
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": []
+          },
+          {
+            "group": "Endpoints",
+            "pages": []
+          }
+        ]
       }
     ]
   },
