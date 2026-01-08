@@ -16,9 +16,10 @@
     "tabs": [
       {
         "tab": "Documentation",
-        "dropdowns": [
+        "icon": "newspaper",
+        "menu": [
           {
-            "dropdown": "Getting Started",
+            "item": "Getting Started",
             "icon": "/icons/rocket.svg",
             "pages": [
               "/index",
@@ -30,7 +31,8 @@
         ]
       },
       {
-        "tab": "Public APIs"
+        "tab": "Public APIs",
+        "icon": "code"
       }
     ]
   },
