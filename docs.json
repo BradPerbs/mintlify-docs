@@ -12,6 +12,9 @@
         "light": "#808080",
         "dark": "#000000"
     },
+    "openapi": [
+        "api-reference/openapi.json"
+    ],
     "api": {
         "baseUrl": "https://api.geogen.io/v1",
         "auth": {
@@ -73,20 +76,51 @@
                         ]
                     },
                     {
-                        "group": "Workspace",
-                        "openapi": "api-reference/openapi.json tag=Workspace"
-                    },
-                    {
-                        "group": "Entities",
-                        "openapi": "api-reference/openapi.json tag=Entities"
-                    },
-                    {
-                        "group": "Analytics",
-                        "openapi": "api-reference/openapi.json tag=Analytics"
-                    },
-                    {
-                        "group": "Models",
-                        "openapi": "api-reference/openapi.json tag=Models"
+                        "group": "API Reference",
+                        "pages": [
+                            {
+                                "openapi": "GET /workspace"
+                            },
+                            {
+                                "openapi": "GET /workspace/members"
+                            },
+                            {
+                                "openapi": "GET /workspace/tags"
+                            },
+                            {
+                                "openapi": "GET /entities"
+                            },
+                            {
+                                "openapi": "POST /entities"
+                            },
+                            {
+                                "openapi": "GET /entities/prompts"
+                            },
+                            {
+                                "openapi": "POST /entities/addprompt"
+                            },
+                            {
+                                "openapi": "DELETE /entities/deleteprompt"
+                            },
+                            {
+                                "openapi": "GET /entities/citations"
+                            },
+                            {
+                                "openapi": "GET /competitors"
+                            },
+                            {
+                                "openapi": "GET /responses"
+                            },
+                            {
+                                "openapi": "GET /models"
+                            },
+                            {
+                                "openapi": "GET /trends/visibility"
+                            },
+                            {
+                                "openapi": "GET /trends/sentiment"
+                            }
+                        ]
                     }
                 ]
             }
