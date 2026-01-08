@@ -17,17 +17,11 @@
       {
         "tab": "Documentation",
         "icon": "newspaper",
-        "menu": [
-          {
-            "item": "Getting Started",
-            "icon": "/icons/rocket.svg",
-            "pages": [
-              "/index",
-              "quick-start/quickstart",
-              "quick-start/prompts-configuration",
-              "quick-start/competitors-selection"
-            ]
-          }
+        "pages": [
+          "/index",
+          "quick-start/quickstart",
+          "quick-start/prompts-configuration",
+          "quick-start/competitors-selection"
         ]
       },
       {
