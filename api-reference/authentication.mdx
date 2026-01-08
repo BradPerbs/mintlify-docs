@@ -1,0 +1,52 @@
+---
+title: 'Authentication'
+description: 'Learn how to authenticate your API requests'
+---
+
+## API Key Authentication
+
+All API requests require authentication using a workspace API key.
+
+### Obtaining an API Key
+
+1. Navigate to **Settings** → **API** in your dashboard
+2. Click **Generate New Key**
+3. Give your key a descriptive name
+4. Copy and securely store your API key - it will only be shown once
+
+<Warning>
+  Keep your API key secret! Never expose it in client-side code or public repositories.
+</Warning>
+
+### Using Your API Key
+
+Authenticate requests using either header:
+
+| Header | Format |
+|--------|--------|
+| `Authorization` | `Bearer wsk_your_api_key` |
+| `X-API-Key` | `wsk_your_api_key` |
+
+### API Key Format
+
+```
+wsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+- **Prefix:** `wsk_` (Workspace Key)
+- **Body:** 32 random alphanumeric characters
+
+### Authentication Errors
+
+| Status | Error |
+|--------|-------|
+| `401` | Missing API key |
+| `401` | Invalid API key |
+| `401` | API key is deactivated |
+
+### Best Practices
+
+- Store API keys in environment variables
+- Use separate keys for development and production
+- Rotate keys periodically
+- Monitor API key usage in your dashboard
