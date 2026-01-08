@@ -5,6 +5,46 @@ openapi: "GET /v1/workspace"
 
 Get workspace information, usage limits, and credit balance.
 
+## Authorizations
+
+<ParamField header="Authorization" type="string" required>
+  Bearer token authentication. Format: `Bearer wsk_your_api_key`
+</ParamField>
+
+## Query Parameters
+
+No query parameters required.
+
+## Response
+
+<ResponseField name="success" type="boolean">
+  Whether the request was successful
+</ResponseField>
+
+<ResponseField name="data.workspace" type="object">
+  Workspace details including `id` and `name`
+</ResponseField>
+
+<ResponseField name="data.subscription" type="object">
+  Subscription info including `planName`, `status`, and `expiresAt`
+</ResponseField>
+
+<ResponseField name="data.usage.entities" type="object">
+  Entity usage with `used` and `limit` counts
+</ResponseField>
+
+<ResponseField name="data.usage.prompts" type="object">
+  Prompt usage with `used` and `limit` counts
+</ResponseField>
+
+<ResponseField name="data.usage.teamMembers" type="object">
+  Team member usage with `used` and `limit` counts
+</ResponseField>
+
+<ResponseField name="data.usage.credits" type="object">
+  Credit info with `balance` and `totalUsed`
+</ResponseField>
+
 <RequestExample>
 
 ```bash cURL
