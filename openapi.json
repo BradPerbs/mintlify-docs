@@ -815,8 +815,8 @@
         "/entities/citations": {
             "get": {
                 "operationId": "getEntityCitations",
-                "summary": "Get Entity Citations",
-                "description": "Get top cited domains for an entity.",
+                "summary": "Get Citations",
+                "description": "Get top cited domains.",
                 "tags": [
                     "Entities"
                 ],
