@@ -13,7 +13,7 @@
         "dark": "#000000"
     },
     "openapi": [
-        "api-reference/openapi.json"
+        "openapi.yaml"
     ],
     "api": {
         "baseUrl": "https://api.geogen.io/v1",
