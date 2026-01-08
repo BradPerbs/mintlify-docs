@@ -12,7 +12,6 @@
         "light": "#808080",
         "dark": "#000000"
     },
-    "openapi": "openapi.yaml",
     "api": {
         "baseUrl": "https://api.geogen.io/v1",
         "auth": {
@@ -75,37 +74,19 @@
                     },
                     {
                         "group": "Workspace",
-                        "pages": [
-                            "public-apis/workspace/get-workspace",
-                            "public-apis/workspace/get-members",
-                            "public-apis/workspace/get-tags"
-                        ]
+                        "openapi": "openapi.yaml tag=Workspace"
                     },
                     {
                         "group": "Entities",
-                        "pages": [
-                            "public-apis/entities/get-entities",
-                            "public-apis/entities/create-entity",
-                            "public-apis/entities/get-prompts",
-                            "public-apis/entities/add-prompt",
-                            "public-apis/entities/delete-prompt",
-                            "public-apis/entities/get-citations"
-                        ]
+                        "openapi": "openapi.yaml tag=Entities"
                     },
                     {
                         "group": "Analytics",
-                        "pages": [
-                            "public-apis/analytics/get-competitors",
-                            "public-apis/analytics/get-responses",
-                            "public-apis/analytics/get-visibility-trend",
-                            "public-apis/analytics/get-sentiment-trend"
-                        ]
+                        "openapi": "openapi.yaml tag=Analytics"
                     },
                     {
                         "group": "Models",
-                        "pages": [
-                            "public-apis/models/get-models"
-                        ]
+                        "openapi": "openapi.yaml tag=Models"
                     }
                 ]
             }
