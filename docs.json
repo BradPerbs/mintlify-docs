@@ -16,7 +16,29 @@
     "tabs": [
       {
         "tab": "Documentation",
-        "icon": "newspaper",
+        "icon": "book-blank",
+        "global": {
+          "anchors": [
+            {
+              "anchor": "Blog",
+              "icon": "newspaper",
+              "color": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              },
+              "href": "https://www.geogen.io/articles"
+            },
+            {
+              "anchor": "Changelog",
+              "icon": "layer-group",
+              "color": {
+                "light": "#ffffff",
+                "dark": "#ffffff"
+              },
+              "href": "https://www.geogen.io/changelog"
+            }
+          ]
+        },
         "groups": [
           {
             "group": "General",
