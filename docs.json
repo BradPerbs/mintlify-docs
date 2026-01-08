@@ -23,8 +23,8 @@
               "anchor": "Blog",
               "icon": "newspaper",
               "color": {
-                "light": "#ffffff",
-                "dark": "#ffffff"
+                "light": "#070707",
+                "dark": "#070707"
               },
               "href": "https://www.geogen.io/articles"
             },
@@ -32,8 +32,8 @@
               "anchor": "Changelog",
               "icon": "layer-group",
               "color": {
-                "light": "#ffffff",
-                "dark": "#ffffff"
+                "light": "#070707",
+                "dark": "#070707"
               },
               "href": "https://www.geogen.io/changelog"
             }
