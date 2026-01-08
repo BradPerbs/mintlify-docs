@@ -1,0 +1,53 @@
+---
+title: 'Rate Limits'
+description: 'Understand API rate limits'
+---
+
+## Overview
+
+The API implements rate limiting to ensure fair usage and protect against abuse.
+
+## Rate Limits
+
+| Operation Type | Rate Limit | Scope |
+|----------------|------------|-------|
+| **Read** (GET requests) | 100 requests/min | Per API Key |
+| **Write** (POST/DELETE requests) | 20 requests/min | Per API Key |
+| **Entity Creation** | 10 entities/hour | Per Workspace |
+
+## Rate Limit Response
+
+When you exceed a rate limit, you'll receive a `429 Too Many Requests` response:
+
+```json
+{
+  "error": "Rate limit exceeded. Please slow down your requests.",
+  "retryAfter": 30
+}
+```
+
+The `Retry-After` header indicates how many seconds to wait before retrying.
+
+## Handling Rate Limits
+
+```python
+import time
+import requests
+
+response = requests.get(url, headers=headers)
+
+if response.status_code == 429:
+    retry_after = int(response.headers.get('Retry-After', 60))
+    time.sleep(retry_after)
+    # Retry the request
+```
+
+## Best Practices
+
+- **Cache responses** to reduce API calls
+- **Batch operations** when possible
+- **Implement retry logic** with exponential backoff
+
+## Need Higher Limits?
+
+Contact us at [support@geogen.io](mailto:support@geogen.io) to discuss enterprise options.

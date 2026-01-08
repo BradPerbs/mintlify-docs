@@ -70,9 +70,9 @@
                     {
                         "group": "Overview",
                         "pages": [
-                            "introduction",
-                            "authentication",
-                            "rate-limits"
+                            "api-reference/introduction",
+                            "api-reference/authentication",
+                            "api-reference/rate-limits"
                         ]
                     },
                     {
