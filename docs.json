@@ -13,7 +13,7 @@
         "dark": "#000000"
     },
     "openapi": [
-        "api-reference/openapi.yaml"
+        "api-reference/openapi.json"
     ],
     "api": {
         "baseUrl": "https://api.geogen.io/v1",
@@ -77,19 +77,19 @@
                     },
                     {
                         "group": "Workspace",
-                        "openapi": "api-reference/openapi.yaml tag=Workspace"
+                        "openapi": "api-reference/openapi.json tag=Workspace"
                     },
                     {
                         "group": "Entities",
-                        "openapi": "api-reference/openapi.yaml tag=Entities"
+                        "openapi": "api-reference/openapi.json tag=Entities"
                     },
                     {
                         "group": "Analytics",
-                        "openapi": "api-reference/openapi.yaml tag=Analytics"
+                        "openapi": "api-reference/openapi.json tag=Analytics"
                     },
                     {
                         "group": "Models",
-                        "openapi": "api-reference/openapi.yaml tag=Models"
+                        "openapi": "api-reference/openapi.json tag=Models"
                     }
                 ]
             }

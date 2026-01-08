@@ -1,0 +1,1377 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Geogen API",
+        "description": "API for accessing LLM visibility data, managing entities, and tracking AI mentions.",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://api.geogen.io/v1",
+            "description": "Production server"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "API key authentication. Format: Bearer wsk_your_api_key"
+            }
+        },
+        "schemas": {
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "string",
+                        "description": "Error message"
+                    }
+                }
+            },
+            "Workspace": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Workspace ID"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Workspace name"
+                    }
+                }
+            },
+            "Subscription": {
+                "type": "object",
+                "properties": {
+                    "planName": {
+                        "type": "string",
+                        "description": "Name of the subscription plan"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Subscription status"
+                    },
+                    "expiresAt": {
+                        "type": "number",
+                        "description": "Expiration timestamp in milliseconds"
+                    }
+                }
+            },
+            "UsageItem": {
+                "type": "object",
+                "properties": {
+                    "used": {
+                        "type": "number",
+                        "description": "Current usage count"
+                    },
+                    "limit": {
+                        "type": "number",
+                        "nullable": true,
+                        "description": "Maximum allowed by plan"
+                    }
+                }
+            },
+            "Credits": {
+                "type": "object",
+                "properties": {
+                    "balance": {
+                        "type": "number",
+                        "description": "Current credit balance"
+                    },
+                    "totalUsed": {
+                        "type": "number",
+                        "description": "Total credits used"
+                    }
+                }
+            },
+            "Entity": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Entity ID"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Entity name"
+                    },
+                    "target": {
+                        "type": "string",
+                        "description": "Target URL or domain"
+                    },
+                    "targetType": {
+                        "type": "string",
+                        "enum": [
+                            "url",
+                            "term"
+                        ],
+                        "description": "Type of target"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Entity description"
+                    },
+                    "faviconUrl": {
+                        "type": "string",
+                        "description": "Favicon URL"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language code"
+                    },
+                    "geolocation": {
+                        "type": "string",
+                        "description": "Geolocation code"
+                    },
+                    "isActive": {
+                        "type": "boolean",
+                        "description": "Whether entity is active"
+                    }
+                }
+            },
+            "Prompt": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Prompt ID"
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "description": "Prompt text"
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Language code"
+                    },
+                    "geolocation": {
+                        "type": "string",
+                        "description": "Geolocation code"
+                    },
+                    "createdAt": {
+                        "type": "number",
+                        "description": "Creation timestamp"
+                    }
+                }
+            },
+            "Model": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Model ID"
+                    },
+                    "uuid": {
+                        "type": "string",
+                        "description": "Model UUID (use for filtering)"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Model name"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Model description"
+                    }
+                }
+            },
+            "TeamMember": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Member ID"
+                    },
+                    "userId": {
+                        "type": "string",
+                        "description": "User ID"
+                    },
+                    "email": {
+                        "type": "string",
+                        "description": "Email address"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Full name"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "owner",
+                            "admin",
+                            "member"
+                        ],
+                        "description": "Role in workspace"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Member status"
+                    }
+                }
+            },
+            "Tag": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Tag ID"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Tag name"
+                    },
+                    "color": {
+                        "type": "string",
+                        "description": "Tag color"
+                    }
+                }
+            },
+            "Pagination": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "number",
+                        "description": "Total count"
+                    },
+                    "limit": {
+                        "type": "number",
+                        "description": "Items per page"
+                    },
+                    "offset": {
+                        "type": "number",
+                        "description": "Current offset"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/workspace": {
+            "get": {
+                "operationId": "getWorkspace",
+                "summary": "Get Workspace",
+                "description": "Get workspace information, usage limits, and credit balance.",
+                "tags": [
+                    "Workspace"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "workspace": {
+                                                    "$ref": "#/components/schemas/Workspace"
+                                                },
+                                                "subscription": {
+                                                    "$ref": "#/components/schemas/Subscription"
+                                                },
+                                                "usage": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "entities": {
+                                                            "$ref": "#/components/schemas/UsageItem"
+                                                        },
+                                                        "prompts": {
+                                                            "$ref": "#/components/schemas/UsageItem"
+                                                        },
+                                                        "teamMembers": {
+                                                            "$ref": "#/components/schemas/UsageItem"
+                                                        },
+                                                        "credits": {
+                                                            "$ref": "#/components/schemas/Credits"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/workspace/members": {
+            "get": {
+                "operationId": "getWorkspaceMembers",
+                "summary": "Get Workspace Members",
+                "description": "Get all team members in the workspace.",
+                "tags": [
+                    "Workspace"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TeamMember"
+                                            }
+                                        },
+                                        "count": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/workspace/tags": {
+            "get": {
+                "operationId": "getWorkspaceTags",
+                "summary": "Get Workspace Tags",
+                "description": "Get all tags in the workspace.",
+                "tags": [
+                    "Workspace"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Tag"
+                                            }
+                                        },
+                                        "count": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities": {
+            "get": {
+                "operationId": "getEntities",
+                "summary": "Get Entities",
+                "description": "Get all entities in the workspace.",
+                "tags": [
+                    "Entities"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Entity"
+                                            }
+                                        },
+                                        "count": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "operationId": "createEntity",
+                "summary": "Create Entity",
+                "description": "Create a new entity with AI-generated prompts and start tracking.",
+                "tags": [
+                    "Entities"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "name",
+                                    "domain",
+                                    "models"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Entity display name"
+                                    },
+                                    "domain": {
+                                        "type": "string",
+                                        "description": "Website domain (e.g., example.com)"
+                                    },
+                                    "models": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Array of model UUIDs from /v1/models"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Entity description"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "default": "en",
+                                        "description": "Language code"
+                                    },
+                                    "geolocation": {
+                                        "type": "string",
+                                        "default": "global",
+                                        "description": "Geolocation code"
+                                    },
+                                    "trackingType": {
+                                        "type": "string",
+                                        "enum": [
+                                            "website",
+                                            "individual"
+                                        ],
+                                        "default": "website",
+                                        "description": "Type of tracking"
+                                    },
+                                    "generatePrompts": {
+                                        "type": "boolean",
+                                        "default": true,
+                                        "description": "Auto-generate AI prompts"
+                                    },
+                                    "startTracking": {
+                                        "type": "boolean",
+                                        "default": true,
+                                        "description": "Start tracking immediately"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Entity created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Entity"
+                                        },
+                                        "promptsGenerated": {
+                                            "type": "number"
+                                        },
+                                        "trackingStarted": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/prompts": {
+            "get": {
+                "operationId": "getEntityPrompts",
+                "summary": "Get Entity Prompts",
+                "description": "Get prompts for a specific entity with performance stats.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Start date (ISO format)"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "End date (ISO format)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Prompt"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/addprompt": {
+            "post": {
+                "operationId": "addPrompt",
+                "summary": "Add Prompt",
+                "description": "Create a new prompt for an entity.",
+                "tags": [
+                    "Entities"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "entityId",
+                                    "prompt"
+                                ],
+                                "properties": {
+                                    "entityId": {
+                                        "type": "string",
+                                        "description": "Entity ID"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "Prompt text"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "description": "Language code"
+                                    },
+                                    "geolocation": {
+                                        "type": "string",
+                                        "description": "Geolocation code"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Prompt created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Prompt"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/deleteprompt": {
+            "delete": {
+                "operationId": "deletePrompt",
+                "summary": "Delete Prompt",
+                "description": "Delete a prompt.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "promptId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Prompt ID to delete"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Prompt deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Prompt not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/citations": {
+            "get": {
+                "operationId": "getEntityCitations",
+                "summary": "Get Entity Citations",
+                "description": "Get top cited domains for an entity.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Results per page"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Pagination offset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "rank": {
+                                                        "type": "number"
+                                                    },
+                                                    "domain": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "totalCitations": {
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/competitors": {
+            "get": {
+                "operationId": "getCompetitors",
+                "summary": "Get Competitors",
+                "description": "Get competitors visibility leaderboard.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Results per page"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Pagination offset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "rank": {
+                                                        "type": "number"
+                                                    },
+                                                    "domain": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    },
+                                                    "visibilityScore": {
+                                                        "type": "number"
+                                                    },
+                                                    "mentionCount": {
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/responses": {
+            "get": {
+                "operationId": "getResponses",
+                "summary": "Get LLM Responses",
+                "description": "Get LLM responses with mention status.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    },
+                    {
+                        "name": "mentionStatus",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "all",
+                                "mentioned",
+                                "not-mentioned"
+                            ]
+                        },
+                        "description": "Filter by mention status"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Results per page"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "Pagination offset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/models": {
+            "get": {
+                "operationId": "getModels",
+                "summary": "Get Models",
+                "description": "Get all available LLM models.",
+                "tags": [
+                    "Models"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Model"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trends/visibility": {
+            "get": {
+                "operationId": "getVisibilityTrend",
+                "summary": "Get Visibility Trend",
+                "description": "Get visibility trend over time.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string"
+                                                    },
+                                                    "score": {
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trends/sentiment": {
+            "get": {
+                "operationId": "getSentimentTrend",
+                "summary": "Get Sentiment Trend",
+                "description": "Get sentiment trend over time.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "date": {
+                                                        "type": "string"
+                                                    },
+                                                    "positive": {
+                                                        "type": "number"
+                                                    },
+                                                    "neutral": {
+                                                        "type": "number"
+                                                    },
+                                                    "negative": {
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
