@@ -66,6 +66,7 @@
             {
                 "tab": "Public APIs",
                 "icon": "code",
+                "href": "api-reference/introduction",
                 "groups": [
                     {
                         "group": "Overview",
@@ -78,63 +79,35 @@
                     {
                         "group": "Workspace",
                         "pages": [
-                            {
-                                "openapi": "openapi.json GET /workspace"
-                            },
-                            {
-                                "openapi": "openapi.json GET /workspace/members"
-                            },
-                            {
-                                "openapi": "openapi.json GET /workspace/tags"
-                            }
+                            "api-reference/workspace",
+                            "api-reference/workspace-members",
+                            "api-reference/workspace-tags"
                         ]
                     },
                     {
                         "group": "Entities",
                         "pages": [
-                            {
-                                "openapi": "openapi.json GET /entities"
-                            },
-                            {
-                                "openapi": "openapi.json POST /entities"
-                            },
-                            {
-                                "openapi": "openapi.json GET /entities/prompts"
-                            },
-                            {
-                                "openapi": "openapi.json POST /entities/addprompt"
-                            },
-                            {
-                                "openapi": "openapi.json DELETE /entities/deleteprompt"
-                            },
-                            {
-                                "openapi": "openapi.json GET /entities/citations"
-                            }
+                            "api-reference/entities-get",
+                            "api-reference/entities-create",
+                            "api-reference/prompts-get",
+                            "api-reference/prompts-add",
+                            "api-reference/prompts-delete",
+                            "api-reference/citations"
                         ]
                     },
                     {
                         "group": "Analytics",
                         "pages": [
-                            {
-                                "openapi": "openapi.json GET /competitors"
-                            },
-                            {
-                                "openapi": "openapi.json GET /responses"
-                            },
-                            {
-                                "openapi": "openapi.json GET /trends/visibility"
-                            },
-                            {
-                                "openapi": "openapi.json GET /trends/sentiment"
-                            }
+                            "api-reference/competitors",
+                            "api-reference/responses",
+                            "api-reference/trends-visibility",
+                            "api-reference/trends-sentiment"
                         ]
                     },
                     {
                         "group": "Models",
                         "pages": [
-                            {
-                                "openapi": "openapi.json GET /models"
-                            }
+                            "api-reference/models"
                         ]
                     }
                 ]
