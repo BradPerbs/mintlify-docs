@@ -55,7 +55,7 @@
                     {
                         "group": "General",
                         "pages": [
-                            "/index",
+                            "index",
                             "quick-start/quickstart",
                             "quick-start/prompts-configuration",
                             "quick-start/competitors-selection"
@@ -66,7 +66,6 @@
             {
                 "tab": "Public APIs",
                 "icon": "code",
-                "href": "api-reference/introduction",
                 "groups": [
                     {
                         "group": "Overview",
@@ -77,51 +76,20 @@
                         ]
                     },
                     {
-                        "group": "API Reference",
-                        "pages": [
-                            {
-                                "openapi": "GET /workspace"
-                            },
-                            {
-                                "openapi": "GET /workspace/members"
-                            },
-                            {
-                                "openapi": "GET /workspace/tags"
-                            },
-                            {
-                                "openapi": "GET /entities"
-                            },
-                            {
-                                "openapi": "POST /entities"
-                            },
-                            {
-                                "openapi": "GET /entities/prompts"
-                            },
-                            {
-                                "openapi": "POST /entities/addprompt"
-                            },
-                            {
-                                "openapi": "DELETE /entities/deleteprompt"
-                            },
-                            {
-                                "openapi": "GET /entities/citations"
-                            },
-                            {
-                                "openapi": "GET /competitors"
-                            },
-                            {
-                                "openapi": "GET /responses"
-                            },
-                            {
-                                "openapi": "GET /models"
-                            },
-                            {
-                                "openapi": "GET /trends/visibility"
-                            },
-                            {
-                                "openapi": "GET /trends/sentiment"
-                            }
-                        ]
+                        "group": "Workspace",
+                        "openapi": "openapi.yaml tag=Workspace"
+                    },
+                    {
+                        "group": "Entities",
+                        "openapi": "openapi.yaml tag=Entities"
+                    },
+                    {
+                        "group": "Analytics",
+                        "openapi": "openapi.yaml tag=Analytics"
+                    },
+                    {
+                        "group": "Models",
+                        "openapi": "openapi.yaml tag=Models"
                     }
                 ]
             }
