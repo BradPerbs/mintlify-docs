@@ -74,19 +74,19 @@
                     },
                     {
                         "group": "Workspace",
-                        "openapi": "openapi.yaml tag=Workspace"
+                        "openapi": "api-reference/openapi.json tag=Workspace"
                     },
                     {
                         "group": "Entities",
-                        "openapi": "openapi.yaml tag=Entities"
+                        "openapi": "api-reference/openapi.json tag=Entities"
                     },
                     {
                         "group": "Analytics",
-                        "openapi": "openapi.yaml tag=Analytics"
+                        "openapi": "api-reference/openapi.json tag=Analytics"
                     },
                     {
                         "group": "Models",
-                        "openapi": "openapi.yaml tag=Models"
+                        "openapi": "api-reference/openapi.json tag=Models"
                     }
                 ]
             }
