@@ -13,16 +13,24 @@
     "dark": "#000000"
   },
   "navigation": {
-    "dropdowns": [
+    "tabs": [
       {
-        "dropdown": "Getting Started",
-        "icon": "/icons/rocket.svg",
-        "pages": [
-          "/index",
-          "quick-start/quickstart",
-          "quick-start/prompts-configuration",
-          "quick-start/competitors-selection"
+        "tab": "Documentation",
+        "dropdowns": [
+          {
+            "dropdown": "Getting Started",
+            "icon": "/icons/rocket.svg",
+            "pages": [
+              "/index",
+              "quick-start/quickstart",
+              "quick-start/prompts-configuration",
+              "quick-start/competitors-selection"
+            ]
+          }
         ]
+      },
+      {
+        "tab": "Public APIs"
       }
     ]
   },
