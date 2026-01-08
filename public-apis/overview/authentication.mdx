@@ -5,13 +5,13 @@ description: 'Learn how to authenticate your API requests'
 
 ## API Key Authentication
 
-All API requests require authentication using a workspace API key. You can generate API keys from your workspace settings.
+All API requests require authentication using a workspace API key.
 
 ### Obtaining an API Key
 
-1. Navigate to **Settings** → **API** in your dashboard
-2. Click **Generate New Key**
-3. Give your key a descriptive name (e.g., "Production API", "Development")
+1. Navigate to **Settings** → **Workspaces** → **Your Workspace** → **API Keys** in your dashboard
+2. Click **Create API Key**
+3. Give your key a descriptive name
 4. Copy and securely store your API key - it will only be shown once
 
 <Warning>
@@ -20,26 +20,14 @@ All API requests require authentication using a workspace API key. You can gener
 
 ### Using Your API Key
 
-You can authenticate requests using either the `Authorization` header or the `X-API-Key` header.
+Authenticate requests using either header:
 
-<Tabs>
-  <Tab title="Authorization Header (Recommended)">
-    ```bash
-    curl -X GET "https://api.geogen.io/v1/entities" \
-      -H "Authorization: Bearer wsk_your_api_key_here"
-    ```
-  </Tab>
-  <Tab title="X-API-Key Header">
-    ```bash
-    curl -X GET "https://api.geogen.io/v1/entities" \
-      -H "X-API-Key: wsk_your_api_key_here"
-    ```
-  </Tab>
-</Tabs>
+| Header | Format |
+|--------|--------|
+| `Authorization` | `Bearer wsk_your_api_key` |
+| `X-API-Key` | `wsk_your_api_key` |
 
 ### API Key Format
-
-All API keys follow this format:
 
 ```
 wsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -50,88 +38,15 @@ wsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ### Authentication Errors
 
-If authentication fails, you'll receive a `401 Unauthorized` response:
-
-<CodeGroup>
-```json Missing API Key
-{
-  "error": "Missing API key. Provide via Authorization: Bearer <key> or X-API-Key header."
-}
-```
-
-```json Invalid API Key
-{
-  "error": "Invalid API key"
-}
-```
-
-```json Deactivated Key
-{
-  "error": "API key is deactivated"
-}
-```
-</CodeGroup>
+| Status | Error |
+|--------|-------|
+| `401` | Missing API key |
+| `401` | Invalid API key |
+| `401` | API key is deactivated |
 
 ### Best Practices
 
-<CardGroup cols={2}>
-  <Card title="Use Environment Variables" icon="key">
-    Store your API key in environment variables, not in your code.
-  </Card>
-  <Card title="Rotate Keys Regularly" icon="rotate">
-    Periodically generate new API keys and deactivate old ones.
-  </Card>
-  <Card title="Use Separate Keys" icon="layer-group">
-    Use different API keys for development, staging, and production.
-  </Card>
-  <Card title="Monitor Usage" icon="chart-line">
-    Track API key usage in your dashboard to detect anomalies.
-  </Card>
-</CardGroup>
-
-### Example: Python
-
-```python
-import requests
-
-API_KEY = "wsk_your_api_key_here"
-BASE_URL = "https://api.geogen.io/v1"
-
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
-}
-
-response = requests.get(f"{BASE_URL}/entities", headers=headers)
-data = response.json()
-
-print(data)
-```
-
-### Example: JavaScript/Node.js
-
-```javascript
-const API_KEY = process.env.GEOGEN_API_KEY;
-const BASE_URL = 'https://api.geogen.io/v1';
-
-const response = await fetch(`${BASE_URL}/entities`, {
-  headers: {
-    'Authorization': `Bearer ${API_KEY}`,
-    'Content-Type': 'application/json'
-  }
-});
-
-const data = await response.json();
-console.log(data);
-```
-
-### Example: cURL
-
-```bash
-# Using environment variable
-export GEOGEN_API_KEY="wsk_your_api_key_here"
-
-curl -X GET "https://api.geogen.io/v1/entities" \
-  -H "Authorization: Bearer $GEOGEN_API_KEY" \
-  -H "Content-Type: application/json"
-```
+- Store API keys in environment variables
+- Use separate keys for development and production
+- Rotate keys periodically
+- Monitor API key usage in your dashboard
