@@ -35,7 +35,9 @@
         "groups": [
           {
             "group": "Overview",
-            "pages": []
+            "pages": [
+              "public-apis/overview/authentication"
+            ]
           },
           {
             "group": "Endpoints",
