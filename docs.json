@@ -91,8 +91,7 @@
                             "api-reference/entities-create",
                             "api-reference/prompts-get",
                             "api-reference/prompts-add",
-                            "api-reference/prompts-delete",
-                            "api-reference/citations"
+                            "api-reference/prompts-delete"
                         ]
                     },
                     {
@@ -101,7 +100,8 @@
                             "api-reference/competitors",
                             "api-reference/responses",
                             "api-reference/trends-visibility",
-                            "api-reference/trends-sentiment"
+                            "api-reference/trends-sentiment",
+                            "api-reference/citations"
                         ]
                     },
                     {
