@@ -685,8 +685,8 @@
         "/entities/addprompt": {
             "post": {
                 "operationId": "addPrompt",
-                "summary": "Add Prompt",
-                "description": "Create a new prompt for an entity.",
+                "summary": "Add Prompt(s)",
+                "description": "Create one or more prompts for an entity. Supports both single prompt and bulk upload modes.\n\n**Single prompt mode:** Use `prompt` field with a string value.\n\n**Bulk upload mode:** Use `prompts` field with an array of prompt objects. Each object can have its own language/geolocation, or inherit from the top-level defaults.",
                 "tags": [
                     "Entities"
                 ],
@@ -697,8 +697,7 @@
                             "schema": {
                                 "type": "object",
                                 "required": [
-                                    "entityId",
-                                    "prompt"
+                                    "entityId"
                                 ],
                                 "properties": {
                                     "entityId": {
@@ -707,15 +706,71 @@
                                     },
                                     "prompt": {
                                         "type": "string",
-                                        "description": "Prompt text"
+                                        "description": "Prompt text (for single prompt mode)"
+                                    },
+                                    "prompts": {
+                                        "type": "array",
+                                        "description": "Array of prompts (for bulk upload mode)",
+                                        "items": {
+                                            "type": "object",
+                                            "required": [
+                                                "prompt"
+                                            ],
+                                            "properties": {
+                                                "prompt": {
+                                                    "type": "string",
+                                                    "description": "Prompt text"
+                                                },
+                                                "language": {
+                                                    "type": "string",
+                                                    "description": "Language code (overrides default)"
+                                                },
+                                                "geolocation": {
+                                                    "type": "string",
+                                                    "description": "Geolocation code (overrides default)"
+                                                }
+                                            }
+                                        }
                                     },
                                     "language": {
                                         "type": "string",
-                                        "description": "Language code"
+                                        "description": "Default language code for prompts"
                                     },
                                     "geolocation": {
                                         "type": "string",
-                                        "description": "Geolocation code"
+                                        "description": "Default geolocation code for prompts"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "single": {
+                                    "summary": "Single prompt",
+                                    "value": {
+                                        "entityId": "abc123def456...",
+                                        "prompt": "What are the best tools for SEO?",
+                                        "language": "en",
+                                        "geolocation": "us"
+                                    }
+                                },
+                                "bulk": {
+                                    "summary": "Bulk upload",
+                                    "value": {
+                                        "entityId": "abc123def456...",
+                                        "prompts": [
+                                            {
+                                                "prompt": "What are the best SEO tools?"
+                                            },
+                                            {
+                                                "prompt": "Quelles sont les meilleures outils SEO?",
+                                                "language": "fr"
+                                            },
+                                            {
+                                                "prompt": "What is the best marketing software in UK?",
+                                                "geolocation": "gb"
+                                            }
+                                        ],
+                                        "language": "en",
+                                        "geolocation": "global"
                                     }
                                 }
                             }
@@ -724,25 +779,81 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Prompt created successfully",
+                        "description": "Prompt(s) created successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean"
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "description": "Single prompt response",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "promptId": {
+                                                    "type": "string",
+                                                    "description": "Created prompt ID"
+                                                }
+                                            }
                                         },
-                                        "data": {
-                                            "$ref": "#/components/schemas/Prompt"
+                                        {
+                                            "type": "object",
+                                            "description": "Bulk upload response",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "promptIds": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": "Array of created prompt IDs"
+                                                },
+                                                "count": {
+                                                    "type": "number",
+                                                    "description": "Number of prompts created"
+                                                }
+                                            }
                                         }
-                                    }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
                                 }
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Prompt limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
                         "content": {
                             "application/json": {
                                 "schema": {
