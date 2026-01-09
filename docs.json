@@ -101,7 +101,8 @@
                             "api-reference/responses",
                             "api-reference/trends-visibility",
                             "api-reference/trends-sentiment",
-                            "api-reference/citations"
+                            "api-reference/citations",
+                            "api-reference/citations-details"
                         ]
                     },
                     {
