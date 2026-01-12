@@ -1,0 +1,102 @@
+---
+title: 'Testing Your Integration'
+description: 'Tips for verifying your tracking setup is working correctly'
+icon: 'flask-vial'
+---
+
+# Testing Your Integration
+
+After installing the LLM Traffic Tracker script on your website, follow these steps to verify everything is working correctly.
+
+## Debug Mode
+
+To enable debug mode, change `data-debug="false"` to `data-debug="true"` in the script tag:
+
+```html
+<!-- LLM Traffic Tracker -->
+<script 
+  src="https://api.geogen.io/js/llm-tracker.js"
+  data-llm-api-key="YOUR_API_KEY"
+  data-llm-api-url="https://api.geogen.io/api/track"
+  data-debug="true"
+  async>
+</script>
+<!-- End LLM Traffic Tracker -->
+```
+
+<Warning>
+  Remember to set `data-debug="false"` in production to avoid unnecessary console output.
+</Warning>
+
+## Browser Console
+
+1. Open your browser's developer console by pressing `F12` or right-clicking and selecting "Inspect"
+2. Navigate to the "Console" tab
+3. Look for LLM Tracker messages to verify the script is working
+
+When debug mode is enabled, you should see messages like:
+- `[LLM Tracker] Initialized`
+- `[LLM Tracker] Page view tracked`
+- `[LLM Tracker] LLM referral detected: ChatGPT`
+
+## Test LLM Traffic
+
+To test the tracking functionality without using an actual LLM service, you can:
+
+### Method 1: URL Parameter
+
+Visit your website with a referrer parameter added to the URL:
+
+```
+https://yourwebsite.com?ref=chat.openai.com
+```
+
+This simulates traffic coming from ChatGPT.
+
+### Method 2: Other LLM Referrers
+
+You can test with different LLM referrer values:
+
+| LLM Service | Test URL Parameter |
+|-------------|-------------------|
+| ChatGPT | `?ref=chat.openai.com` |
+| Perplexity | `?ref=perplexity.ai` |
+| Claude | `?ref=claude.ai` |
+| Gemini | `?ref=gemini.google.com` |
+| Copilot | `?ref=copilot.microsoft.com` |
+
+## Verify in Analytics Dashboard
+
+After testing:
+
+1. Return to the **Analytics Dashboard** in your Geogen account
+2. Navigate to the **Overview** tab
+3. You should see the test events appearing in the charts and metrics
+
+<Info>
+  Events may take a few moments to appear in the dashboard depending on data processing.
+</Info>
+
+## Common Issues
+
+### Script Not Loading
+
+- Verify the script URL is correct
+- Check for any Content Security Policy (CSP) restrictions
+- Ensure the script is placed correctly in your HTML
+
+### Events Not Appearing
+
+- Confirm `data-debug="true"` shows initialization messages
+- Check that your API key is correct
+- Verify the API URL is set to `https://api.geogen.io/api/track`
+
+### CORS Errors
+
+If you see CORS errors in the console:
+- Ensure you're using the correct API endpoint
+- Contact support if the issue persists
+
+<Tip>
+  For additional help, check out our [support documentation](/support) or reach out to our team.
+</Tip>
