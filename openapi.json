@@ -1642,6 +1642,260 @@
                     }
                 }
             }
+        },
+        "/query-fanouts": {
+            "get": {
+                "operationId": "getQueryFanouts",
+                "summary": "Get Query Fanouts",
+                "description": "Get web search queries that LLMs performed during response generation. These are the queries that AI models use to search the web while generating their responses.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period (default: 30d)"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Start date (ISO format, for custom range)"
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "End date (ISO format, for custom range)"
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs to filter by"
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated tag IDs to filter by"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 20,
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Results per page (1-100, default: 20)"
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "number",
+                            "default": 0
+                        },
+                        "description": "Pagination offset"
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search filter for query text"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "query": {
+                                                        "type": "string",
+                                                        "description": "The web search query text"
+                                                    },
+                                                    "frequency": {
+                                                        "type": "number",
+                                                        "description": "Number of times this query was performed"
+                                                    },
+                                                    "uniqueResponses": {
+                                                        "type": "number",
+                                                        "description": "Number of unique responses that triggered this query"
+                                                    },
+                                                    "latestDate": {
+                                                        "type": "string",
+                                                        "description": "ISO timestamp of the most recent occurrence"
+                                                    },
+                                                    "modelIds": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "description": "Model UUIDs that performed this query"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "totalCount": {
+                                            "type": "number",
+                                            "description": "Total number of unique queries"
+                                        },
+                                        "totalQueries": {
+                                            "type": "number",
+                                            "description": "Total number of query occurrences"
+                                        },
+                                        "pagination": {
+                                            "type": "object",
+                                            "properties": {
+                                                "totalCount": {
+                                                    "type": "number"
+                                                },
+                                                "totalPages": {
+                                                    "type": "number"
+                                                },
+                                                "currentPage": {
+                                                    "type": "number"
+                                                },
+                                                "limit": {
+                                                    "type": "number"
+                                                },
+                                                "offset": {
+                                                    "type": "number"
+                                                },
+                                                "hasNextPage": {
+                                                    "type": "boolean"
+                                                },
+                                                "hasPreviousPage": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "period": {
+                                            "type": "string",
+                                            "description": "The time period used for the query"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true,
+                                    "data": [
+                                        {
+                                            "query": "best project management tools 2024",
+                                            "frequency": 15,
+                                            "uniqueResponses": 12,
+                                            "latestDate": "2024-01-15T10:30:00.000Z",
+                                            "modelIds": [
+                                                "uuid-1",
+                                                "uuid-2"
+                                            ]
+                                        },
+                                        {
+                                            "query": "top productivity software reviews",
+                                            "frequency": 8,
+                                            "uniqueResponses": 6,
+                                            "latestDate": "2024-01-14T15:45:00.000Z",
+                                            "modelIds": [
+                                                "uuid-1"
+                                            ]
+                                        }
+                                    ],
+                                    "totalCount": 150,
+                                    "totalQueries": 450,
+                                    "pagination": {
+                                        "totalCount": 150,
+                                        "totalPages": 8,
+                                        "currentPage": 1,
+                                        "limit": 20,
+                                        "offset": 0,
+                                        "hasNextPage": true,
+                                        "hasPreviousPage": false
+                                    },
+                                    "period": "30d"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
