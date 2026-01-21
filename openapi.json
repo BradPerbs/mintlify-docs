@@ -998,7 +998,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
+                        "description": "Comma-separated prompt IDs to filter by specific prompts"
                     }
                 ],
                 "responses": {
@@ -1416,7 +1416,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
+                        "description": "Comma-separated prompt IDs to filter by specific prompts"
                     }
                 ],
                 "responses": {
@@ -1844,7 +1844,7 @@
                         "schema": {
                             "type": "string"
                         },
-                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
+                        "description": "Comma-separated prompt IDs to filter by specific prompts"
                     }
                 ],
                 "responses": {
