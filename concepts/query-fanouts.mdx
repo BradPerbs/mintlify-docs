@@ -1,0 +1,134 @@
+---
+title: "Query Fanouts"
+description: "Understanding how AI models research your brand and why it matters for GEO"
+icon: "magnifying-glass"
+---
+
+# What are Query Fanouts?
+
+**Query Fanouts** are the web search queries that AI models like ChatGPT, Perplexity, and Google Gemini execute when generating responses to user prompts. When a user asks an AI a question, the model often performs real-time web searches to gather up-to-date information before formulating its answer.
+
+<Info>
+Query Fanouts give you unprecedented visibility into *how* AI models research your brand, competitors, and industry topics in real-time.
+</Info>
+
+## How Query Fanouts Work
+
+When users ask AI assistants questions like *"What's the best project management tool?"* or *"Compare Monday.com vs Asana"*, the AI doesn't always rely solely on its training data. Instead, many modern AI models:
+
+1. **Parse the user's intent** - Understanding what information is needed
+2. **Generate search queries** - Creating one or more web searches to find current information
+3. **Execute the searches** - Querying the web for relevant results
+4. **Synthesize the results** - Combining the information into a coherent response
+
+Geogen captures step 2 and 3 - the actual search queries the AI generates and executes. These are your **Query Fanouts**.
+
+## Example Query Fanouts
+
+For a prompt like *"What are the best CRM tools for small businesses?"*, an AI might generate these query fanouts:
+
+| Query | Purpose |
+|-------|---------|
+| `best CRM software small business 2024` | Find current rankings |
+| `HubSpot CRM pricing` | Research specific product |
+| `Salesforce small business reviews` | Gather user sentiment |
+| `CRM comparison small teams` | Find comparison content |
+
+## Why Query Fanouts Matter for GEO
+
+Understanding Query Fanouts is crucial for **Generative Engine Optimization (GEO)** because they reveal:
+
+### 1. 🔍 The Exact Searches AI Uses
+
+Unlike traditional SEO where you guess which keywords users might search, Query Fanouts show you the **exact queries** AI models use to research your topic. This is the ground truth of how AI gathers information.
+
+### 2. 📊 Content Gap Opportunities
+
+If an AI is searching for `[your competitor] vs [your brand] comparison` but can't find quality comparison content, that's a content opportunity you can fill.
+
+### 3. 🎯 Keyword Intelligence
+
+Query Fanouts reveal the language patterns AI models use when researching topics. These patterns often differ from human search behavior, giving you unique optimization opportunities.
+
+### 4. 📈 Brand Monitoring
+
+See when and how often AI models are actively researching your brand, products, or industry. Spikes in query fanouts for your brand can indicate trending interest.
+
+### 5. 🏆 Competitive Intelligence
+
+Discover which competitors are being researched alongside your brand and understand the competitive landscape from the AI's perspective.
+
+## Optimizing for Query Fanouts
+
+Based on Query Fanout data, you can optimize your content strategy:
+
+<CardGroup cols={2}>
+  <Card title="Create Comparison Content" icon="scale-balanced">
+    If AIs frequently search for `[Brand A] vs [Brand B]`, create authoritative comparison pages that answer these queries.
+  </Card>
+  <Card title="Answer Specific Queries" icon="circle-question">
+    Build content that directly answers the specific questions AIs are searching for about your industry.
+  </Card>
+  <Card title="Optimize for AI Keywords" icon="robot">
+    Use the exact language patterns from query fanouts in your content to match what AIs are looking for.
+  </Card>
+  <Card title="Build Topic Authority" icon="award">
+    Create comprehensive content clusters around topics that trigger frequent query fanouts.
+  </Card>
+</CardGroup>
+
+## Query Fanouts vs Citations
+
+It's important to understand the difference between Query Fanouts and Citations:
+
+| Aspect | Query Fanouts | Citations |
+|--------|--------------|-----------|
+| **What they are** | Search queries AI executes | URLs AI references in responses |
+| **When they occur** | Before the response is generated | Within the final response |
+| **What they show** | How AI researches topics | What sources AI trusts |
+| **Optimization focus** | Content discoverability | Source authority |
+
+<Tip>
+**Pro Tip:** Cross-reference your Query Fanouts with Citations. If AI is searching for topics related to your brand but citing competitors, you have a clear optimization opportunity.
+</Tip>
+
+## Accessing Query Fanout Data
+
+You can access Query Fanout data in several ways:
+
+### In the Dashboard
+
+Navigate to your entity's Query Fanouts tab to see all the search queries AI models are executing related to your prompts.
+
+### Via the API
+
+Use the `/query-fanouts` endpoint to programmatically access Query Fanout data:
+
+```bash
+GET /v1/query-fanouts?entityId=YOUR_ENTITY_ID&period=30d
+```
+
+See the [API Reference](/api-reference/query-fanouts) for full documentation.
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Monitor regularly">
+    Query Fanout patterns can shift as AI models update. Check your data weekly to identify new trends.
+  </Accordion>
+  <Accordion title="Segment by model">
+    Different AI models (ChatGPT vs Perplexity vs Gemini) may use different search strategies. Analyze them separately.
+  </Accordion>
+  <Accordion title="Track over time">
+    Historical Query Fanout data helps you understand seasonal trends and measure the impact of your GEO efforts.
+  </Accordion>
+  <Accordion title="Combine with other metrics">
+    Use Query Fanouts alongside visibility scores and citation data for a complete picture of your AI presence.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+<Note>
+Query Fanouts are captured in real-time as our system monitors AI responses to your configured prompts. The more prompts you have active, the more Query Fanout data you'll collect.
+</Note>

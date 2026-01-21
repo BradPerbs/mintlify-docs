@@ -60,6 +60,12 @@
                             "quick-start/prompts-configuration",
                             "quick-start/competitors-selection"
                         ]
+                    },
+                    {
+                        "group": "Concepts",
+                        "pages": [
+                            "concepts/query-fanouts"
+                        ]
                     }
                 ]
             },
