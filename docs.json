@@ -99,6 +99,7 @@
                         "pages": [
                             "api-reference/competitors",
                             "api-reference/responses",
+                            "api-reference/responses-details",
                             "api-reference/trends-visibility",
                             "api-reference/trends-sentiment",
                             "api-reference/citations",

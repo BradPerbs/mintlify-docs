@@ -981,6 +981,24 @@
                             "type": "number"
                         },
                         "description": "Pagination offset"
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated tag IDs to filter prompts by"
+                    },
+                    {
+                        "name": "promptIds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
                     }
                 ],
                 "responses": {
@@ -1381,6 +1399,24 @@
                             "type": "number"
                         },
                         "description": "Pagination offset"
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated tag IDs to filter prompts by"
+                    },
+                    {
+                        "name": "promptIds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
                     }
                 ],
                 "responses": {
@@ -1410,6 +1446,290 @@
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/responses/details": {
+            "get": {
+                "operationId": "getResponseDetails",
+                "summary": "Get Response Details",
+                "description": "Get comprehensive details for a single LLM response, including all mentions, citations, and query fanouts associated with it.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "responseId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Response UUID (from the /responses endpoint)"
+                    },
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID to get mention context for"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "response": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "responseId": {
+                                                            "type": "string",
+                                                            "description": "Response UUID"
+                                                        },
+                                                        "responseText": {
+                                                            "type": "string",
+                                                            "description": "Full response text from the LLM"
+                                                        },
+                                                        "responseLength": {
+                                                            "type": "number",
+                                                            "description": "Length of response in characters"
+                                                        },
+                                                        "createdAt": {
+                                                            "type": "string",
+                                                            "description": "ISO timestamp when response was created"
+                                                        },
+                                                        "modelId": {
+                                                            "type": "string",
+                                                            "description": "Model UUID that generated this response"
+                                                        },
+                                                        "isMentioned": {
+                                                            "type": "boolean",
+                                                            "description": "Whether the entity was mentioned in this response"
+                                                        },
+                                                        "mentionPosition": {
+                                                            "type": "number",
+                                                            "nullable": true,
+                                                            "description": "Position of entity mention in the ranked list (if applicable)"
+                                                        },
+                                                        "mentionSentiment": {
+                                                            "type": "number",
+                                                            "nullable": true,
+                                                            "description": "Sentiment score of entity mention (-1 to 1)"
+                                                        },
+                                                        "totalOptionsInList": {
+                                                            "type": "number",
+                                                            "nullable": true,
+                                                            "description": "Total items in the ranked list (if applicable)"
+                                                        }
+                                                    }
+                                                },
+                                                "prompt": {
+                                                    "type": "object",
+                                                    "nullable": true,
+                                                    "properties": {
+                                                        "promptId": {
+                                                            "type": "string",
+                                                            "description": "Prompt ID"
+                                                        },
+                                                        "prompt": {
+                                                            "type": "string",
+                                                            "description": "The prompt text"
+                                                        },
+                                                        "language": {
+                                                            "type": "string",
+                                                            "description": "Language of the prompt"
+                                                        },
+                                                        "geolocation": {
+                                                            "type": "string",
+                                                            "description": "Geolocation used for the prompt"
+                                                        }
+                                                    }
+                                                },
+                                                "mentions": {
+                                                    "type": "array",
+                                                    "description": "All entities mentioned in this response",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "entityUuid": {
+                                                                "type": "string"
+                                                            },
+                                                            "entityName": {
+                                                                "type": "string"
+                                                            },
+                                                            "entityDomain": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            },
+                                                            "position": {
+                                                                "type": "number"
+                                                            },
+                                                            "sentiment": {
+                                                                "type": "number",
+                                                                "nullable": true
+                                                            },
+                                                            "isCurrentEntity": {
+                                                                "type": "boolean",
+                                                                "description": "Whether this is the queried entity"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "citations": {
+                                                    "type": "array",
+                                                    "description": "All URLs cited in this response",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "url": {
+                                                                "type": "string"
+                                                            },
+                                                            "entityUuid": {
+                                                                "type": "string",
+                                                                "description": "Entity UUID associated with this citation"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "queryFanouts": {
+                                                    "type": "array",
+                                                    "description": "Web search queries the LLM performed while generating this response",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "query": {
+                                                                "type": "string"
+                                                            },
+                                                            "entityUuid": {
+                                                                "type": "string"
+                                                            },
+                                                            "createdAt": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "summary": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "mentionsCount": {
+                                                            "type": "number"
+                                                        },
+                                                        "citationsCount": {
+                                                            "type": "number"
+                                                        },
+                                                        "queryFanoutsCount": {
+                                                            "type": "number"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true,
+                                    "data": {
+                                        "response": {
+                                            "responseId": "2e24732f-a7b4-490b-918d-63ff5cf48683",
+                                            "responseText": "Here are the top project management tools...",
+                                            "responseLength": 1250,
+                                            "createdAt": "2024-01-15T10:30:00.000Z",
+                                            "modelId": "gpt-4-uuid",
+                                            "isMentioned": true,
+                                            "mentionPosition": 2,
+                                            "mentionSentiment": 0.8,
+                                            "totalOptionsInList": 5
+                                        },
+                                        "prompt": {
+                                            "promptId": "abc123",
+                                            "prompt": "What are the best project management tools?",
+                                            "language": "en",
+                                            "geolocation": "US"
+                                        },
+                                        "mentions": [
+                                            {
+                                                "entityUuid": "entity-uuid-1",
+                                                "entityName": "Asana",
+                                                "entityDomain": "asana.com",
+                                                "position": 1,
+                                                "sentiment": 0.9,
+                                                "isCurrentEntity": false
+                                            },
+                                            {
+                                                "entityUuid": "entity-uuid-2",
+                                                "entityName": "Monday.com",
+                                                "entityDomain": "monday.com",
+                                                "position": 2,
+                                                "sentiment": 0.8,
+                                                "isCurrentEntity": true
+                                            }
+                                        ],
+                                        "citations": [
+                                            {
+                                                "url": "https://www.g2.com/categories/project-management",
+                                                "entityUuid": "g2-entity-uuid"
+                                            }
+                                        ],
+                                        "queryFanouts": [
+                                            {
+                                                "query": "best project management software 2024",
+                                                "entityUuid": "entity-uuid-2",
+                                                "createdAt": "2024-01-15T10:29:55.000Z"
+                                            }
+                                        ],
+                                        "summary": {
+                                            "mentionsCount": 2,
+                                            "citationsCount": 1,
+                                            "queryFanoutsCount": 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Response or entity not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1507,6 +1827,24 @@
                             "type": "string"
                         },
                         "description": "Comma-separated model UUIDs"
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated tag IDs to filter prompts by"
+                    },
+                    {
+                        "name": "promptIds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated prompt IDs (Convex IDs or UUIDs) to filter by specific prompts"
                     }
                 ],
                 "responses": {
