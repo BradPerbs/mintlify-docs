@@ -530,6 +530,63 @@
                                         "description": "Start tracking immediately"
                                     }
                                 }
+                            },
+                            "examples": {
+                                "with_custom_prompts": {
+                                    "summary": "Create entity with custom prompts",
+                                    "value": {
+                                        "name": "My Website",
+                                        "domain": "https://example.com",
+                                        "description": "An example website for demonstration",
+                                        "language": "en",
+                                        "geolocation": "global",
+                                        "trackingType": "website",
+                                        "models": [
+                                            "model-uuid-1",
+                                            "model-uuid-2"
+                                        ],
+                                        "prompts": [
+                                            "What is the best project management tool for remote teams?",
+                                            "Which website builder is recommended for small businesses?",
+                                            "What are the top tools for improving website SEO?"
+                                        ],
+                                        "startTracking": true
+                                    }
+                                },
+                                "auto_generate_prompts": {
+                                    "summary": "Create entity with auto-generated prompts",
+                                    "value": {
+                                        "name": "My Website",
+                                        "domain": "https://example.com",
+                                        "description": "An example website for demonstration",
+                                        "language": "en",
+                                        "geolocation": "global",
+                                        "trackingType": "website",
+                                        "models": [
+                                            "model-uuid-1",
+                                            "model-uuid-2"
+                                        ],
+                                        "generatePrompts": true,
+                                        "startTracking": true
+                                    }
+                                },
+                                "no_prompts": {
+                                    "summary": "Create entity without any prompts",
+                                    "value": {
+                                        "name": "My Website",
+                                        "domain": "https://example.com",
+                                        "description": "An example website for demonstration",
+                                        "language": "en",
+                                        "geolocation": "global",
+                                        "trackingType": "website",
+                                        "models": [
+                                            "model-uuid-1",
+                                            "model-uuid-2"
+                                        ],
+                                        "generatePrompts": false,
+                                        "startTracking": true
+                                    }
+                                }
                             }
                         }
                     }
