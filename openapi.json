@@ -458,7 +458,7 @@
             "post": {
                 "operationId": "createEntity",
                 "summary": "Create Entity",
-                "description": "Create a new entity with AI-generated prompts and start tracking.",
+                "description": "Create a new entity and start tracking its visibility across LLMs.\n\nPrompts can be handled in three ways:\n- **Custom prompts**: Provide your own prompts via the `prompts` array. They will inherit the entity's `language` and `geolocation`.\n- **Auto-generate** (default): Omit the `prompts` field and AI will generate relevant prompts based on the entity's description, language, and geolocation.\n- **No prompts**: Set `generatePrompts` to `false` to create the entity without any prompts. You can add prompts later via the Add Prompt endpoint.",
                 "tags": [
                     "Entities"
                 ],
@@ -496,12 +496,12 @@
                                     "language": {
                                         "type": "string",
                                         "default": "en",
-                                        "description": "Language code"
+                                        "description": "Language code for the entity and its prompts (e.g., 'en', 'fr', 'de'). All prompts — whether custom or auto-generated — will use this language."
                                     },
                                     "geolocation": {
                                         "type": "string",
                                         "default": "global",
-                                        "description": "Geolocation code"
+                                        "description": "Geolocation code for the entity and its prompts (e.g., 'global', 'us', 'gb'). All prompts will use this geolocation."
                                     },
                                     "trackingType": {
                                         "type": "string",
@@ -517,12 +517,12 @@
                                         "items": {
                                             "type": "string"
                                         },
-                                        "description": "Custom prompts to use for tracking. When provided, auto-generation is skipped and these prompts are saved directly. Each prompt must be a non-empty string. Omit this field to auto-generate prompts, or set generatePrompts to false for no prompts."
+                                        "description": "Custom prompts for tracking. Each prompt is a plain text string. All prompts inherit the entity's language and geolocation — no need to specify them per prompt. When provided, auto-generation is skipped."
                                     },
                                     "generatePrompts": {
                                         "type": "boolean",
                                         "default": true,
-                                        "description": "Auto-generate AI prompts. Ignored when 'prompts' array is provided."
+                                        "description": "Whether to auto-generate prompts using AI. Ignored when the `prompts` array is provided. Set to `false` to create the entity without any prompts."
                                     },
                                     "startTracking": {
                                         "type": "boolean",
@@ -533,49 +533,51 @@
                             },
                             "examples": {
                                 "with_custom_prompts": {
-                                    "summary": "Create entity with custom prompts",
+                                    "summary": "With custom prompts",
+                                    "description": "Provide your own prompts. All prompts will inherit the entity's language (fr) and geolocation (fr). Auto-generation is skipped.",
                                     "value": {
-                                        "name": "My Website",
-                                        "domain": "https://example.com",
-                                        "description": "An example website for demonstration",
-                                        "language": "en",
-                                        "geolocation": "global",
+                                        "name": "Mon Site",
+                                        "domain": "example.fr",
+                                        "description": "Plateforme de gestion de projet pour les équipes distantes",
+                                        "language": "fr",
+                                        "geolocation": "fr",
                                         "trackingType": "website",
                                         "models": [
                                             "model-uuid-1",
                                             "model-uuid-2"
                                         ],
                                         "prompts": [
-                                            "What is the best project management tool for remote teams?",
-                                            "Which website builder is recommended for small businesses?",
-                                            "What are the top tools for improving website SEO?"
+                                            "Quel est le meilleur outil de gestion de projet pour les équipes à distance ?",
+                                            "Quels logiciels recommandez-vous pour la collaboration en ligne ?",
+                                            "Quelles sont les meilleures alternatives à Trello en France ?"
                                         ],
                                         "startTracking": true
                                     }
                                 },
                                 "auto_generate_prompts": {
-                                    "summary": "Create entity with auto-generated prompts",
+                                    "summary": "With auto-generated prompts (default)",
+                                    "description": "Omit the prompts field to let AI generate relevant prompts based on the entity's description, language, and geolocation.",
                                     "value": {
                                         "name": "My Website",
-                                        "domain": "https://example.com",
-                                        "description": "An example website for demonstration",
+                                        "domain": "example.com",
+                                        "description": "Project management platform for remote teams with task tracking and time management features",
                                         "language": "en",
-                                        "geolocation": "global",
+                                        "geolocation": "us",
                                         "trackingType": "website",
                                         "models": [
                                             "model-uuid-1",
                                             "model-uuid-2"
                                         ],
-                                        "generatePrompts": true,
                                         "startTracking": true
                                     }
                                 },
                                 "no_prompts": {
-                                    "summary": "Create entity without any prompts",
+                                    "summary": "Without prompts",
+                                    "description": "Create the entity without any prompts. You can add prompts later via the Add Prompt endpoint.",
                                     "value": {
                                         "name": "My Website",
-                                        "domain": "https://example.com",
-                                        "description": "An example website for demonstration",
+                                        "domain": "example.com",
+                                        "description": "Project management platform for remote teams",
                                         "language": "en",
                                         "geolocation": "global",
                                         "trackingType": "website",
@@ -607,7 +609,7 @@
                                         },
                                         "promptsGenerated": {
                                             "type": "number",
-                                            "description": "Number of prompts created (user-provided or auto-generated)"
+                                            "description": "Number of prompts saved for this entity (0 if generatePrompts was false and no custom prompts were provided)"
                                         },
                                         "prompts": {
                                             "type": "array",
@@ -624,15 +626,15 @@
                                                     },
                                                     "language": {
                                                         "type": "string",
-                                                        "description": "Language code"
+                                                        "description": "Language code (inherited from the entity)"
                                                     },
                                                     "geolocation": {
                                                         "type": "string",
-                                                        "description": "Geolocation code"
+                                                        "description": "Geolocation code (inherited from the entity)"
                                                     }
                                                 }
                                             },
-                                            "description": "The saved prompts for this entity"
+                                            "description": "The saved prompts for this entity. Each prompt inherits the entity's language and geolocation."
                                         },
                                         "trackingStarted": {
                                             "type": "boolean"
