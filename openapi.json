@@ -458,7 +458,7 @@
             "post": {
                 "operationId": "createEntity",
                 "summary": "Create Entity",
-                "description": "Create a new entity and start tracking its visibility across LLMs.\n\nPrompts can be handled in three ways:\n- **Custom prompts**: Provide your own prompts via the `prompts` array. They will inherit the entity's `language` and `geolocation`.\n- **Auto-generate** (default): Omit the `prompts` field and AI will generate relevant prompts based on the entity's description, language, and geolocation.\n- **No prompts**: Set `generatePrompts` to `false` to create the entity without any prompts. You can add prompts later via the Add Prompt endpoint.",
+                "description": "Create a new entity and start tracking its visibility across LLMs.\n\nPrompts can be handled in three ways:\n- **Custom prompts**: Provide your own prompts via the `prompts` array. Each prompt can be a simple string (inherits the entity's `language` and `geolocation`) or an object with per-prompt `language` and `geolocation` overrides.\n- **Auto-generate** (default): Omit the `prompts` field and AI will generate relevant prompts based on the entity's description, language, and geolocation.\n- **No prompts**: Set `generatePrompts` to `false` to create the entity without any prompts. You can add prompts later via the Add Prompt endpoint.",
                 "tags": [
                     "Entities"
                 ],
@@ -496,12 +496,12 @@
                                     "language": {
                                         "type": "string",
                                         "default": "en",
-                                        "description": "Language code for the entity and its prompts (e.g., 'en', 'fr', 'de'). All prompts — whether custom or auto-generated — will use this language."
+                                        "description": "Language code for the entity (e.g., 'en', 'fr', 'de'). Used as default for auto-generated prompts and for custom prompts that don't specify their own language."
                                     },
                                     "geolocation": {
                                         "type": "string",
                                         "default": "global",
-                                        "description": "Geolocation code for the entity and its prompts (e.g., 'global', 'us', 'gb'). All prompts will use this geolocation."
+                                        "description": "Geolocation code for the entity (e.g., 'global', 'us', 'gb'). Used as default for auto-generated prompts and for custom prompts that don't specify their own geolocation."
                                     },
                                     "trackingType": {
                                         "type": "string",
@@ -515,9 +515,32 @@
                                     "prompts": {
                                         "type": "array",
                                         "items": {
-                                            "type": "string"
+                                            "oneOf": [
+                                                {
+                                                    "type": "string",
+                                                    "description": "Prompt text (uses entity's language and geolocation)"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "required": ["prompt"],
+                                                    "properties": {
+                                                        "prompt": {
+                                                            "type": "string",
+                                                            "description": "Prompt text"
+                                                        },
+                                                        "language": {
+                                                            "type": "string",
+                                                            "description": "Language override for this prompt (e.g., 'fr', 'de'). Defaults to entity's language."
+                                                        },
+                                                        "geolocation": {
+                                                            "type": "string",
+                                                            "description": "Geolocation override for this prompt (e.g., 'us', 'gb'). Defaults to entity's geolocation."
+                                                        }
+                                                    }
+                                                }
+                                            ]
                                         },
-                                        "description": "Custom prompts for tracking. Each prompt is a plain text string. All prompts inherit the entity's language and geolocation — no need to specify them per prompt. When provided, auto-generation is skipped."
+                                        "description": "Custom prompts for tracking. Each item can be a plain string (inherits entity's language/geolocation) or an object with per-prompt language/geolocation overrides. When provided, auto-generation is skipped."
                                     },
                                     "generatePrompts": {
                                         "type": "boolean",
@@ -532,9 +555,9 @@
                                 }
                             },
                             "examples": {
-                                "with_custom_prompts": {
-                                    "summary": "With custom prompts",
-                                    "description": "Provide your own prompts. All prompts will inherit the entity's language (fr) and geolocation (fr). Auto-generation is skipped.",
+                                "with_custom_prompts_simple": {
+                                    "summary": "Custom prompts (strings)",
+                                    "description": "Simple string prompts that inherit the entity's language and geolocation.",
                                     "value": {
                                         "name": "Mon Site",
                                         "domain": "example.fr",
@@ -554,8 +577,37 @@
                                         "startTracking": true
                                     }
                                 },
+                                "with_custom_prompts_mixed": {
+                                    "summary": "Custom prompts (per-prompt language/geo)",
+                                    "description": "Mix of strings and objects. Strings inherit entity defaults, objects can override language and geolocation per prompt.",
+                                    "value": {
+                                        "name": "My Website",
+                                        "domain": "example.com",
+                                        "description": "Project management platform for remote teams",
+                                        "language": "en",
+                                        "geolocation": "us",
+                                        "trackingType": "website",
+                                        "models": [
+                                            "model-uuid-1",
+                                            "model-uuid-2"
+                                        ],
+                                        "prompts": [
+                                            "What is the best project management tool for remote teams?",
+                                            {
+                                                "prompt": "Quel est le meilleur outil de gestion de projet ?",
+                                                "language": "fr",
+                                                "geolocation": "fr"
+                                            },
+                                            {
+                                                "prompt": "What are the top project management tools in the UK?",
+                                                "geolocation": "gb"
+                                            }
+                                        ],
+                                        "startTracking": true
+                                    }
+                                },
                                 "auto_generate_prompts": {
-                                    "summary": "With auto-generated prompts (default)",
+                                    "summary": "Auto-generated prompts (default)",
                                     "description": "Omit the prompts field to let AI generate relevant prompts based on the entity's description, language, and geolocation.",
                                     "value": {
                                         "name": "My Website",
@@ -626,15 +678,15 @@
                                                     },
                                                     "language": {
                                                         "type": "string",
-                                                        "description": "Language code (inherited from the entity)"
+                                                        "description": "Language code (per-prompt override or inherited from the entity)"
                                                     },
                                                     "geolocation": {
                                                         "type": "string",
-                                                        "description": "Geolocation code (inherited from the entity)"
+                                                        "description": "Geolocation code (per-prompt override or inherited from the entity)"
                                                     }
                                                 }
                                             },
-                                            "description": "The saved prompts for this entity. Each prompt inherits the entity's language and geolocation."
+                                            "description": "The saved prompts for this entity. Each prompt has its own language and geolocation (either per-prompt override or inherited from the entity)."
                                         },
                                         "trackingStarted": {
                                             "type": "boolean"
