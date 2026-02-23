@@ -58,6 +58,7 @@
                             "index",
                             "quick-start/quickstart",
                             "quick-start/prompts-configuration",
+                            "quick-start/prompts-tab",
                             "quick-start/competitors-selection"
                         ]
                     },
@@ -109,6 +110,7 @@
                             "api-reference/responses-details",
                             "api-reference/trends-visibility",
                             "api-reference/trends-sentiment",
+                            "api-reference/trends-citations",
                             "api-reference/citations",
                             "api-reference/citations-details",
                             "api-reference/query-fanouts"
