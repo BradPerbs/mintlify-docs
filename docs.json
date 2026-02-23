@@ -94,6 +94,7 @@
                         "group": "Entities",
                         "pages": [
                             "api-reference/entities-get",
+                            "api-reference/check-domain",
                             "api-reference/entities-create",
                             "api-reference/prompts-get",
                             "api-reference/prompts-add",

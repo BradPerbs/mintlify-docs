@@ -512,10 +512,17 @@
                                         "default": "website",
                                         "description": "Type of tracking"
                                     },
+                                    "prompts": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Custom prompts to use for tracking. When provided, auto-generation is skipped and these prompts are saved directly. Each prompt must be a non-empty string. Omit this field to auto-generate prompts, or set generatePrompts to false for no prompts."
+                                    },
                                     "generatePrompts": {
                                         "type": "boolean",
                                         "default": true,
-                                        "description": "Auto-generate AI prompts"
+                                        "description": "Auto-generate AI prompts. Ignored when 'prompts' array is provided."
                                     },
                                     "startTracking": {
                                         "type": "boolean",
@@ -542,7 +549,33 @@
                                             "$ref": "#/components/schemas/Entity"
                                         },
                                         "promptsGenerated": {
-                                            "type": "number"
+                                            "type": "number",
+                                            "description": "Number of prompts created (user-provided or auto-generated)"
+                                        },
+                                        "prompts": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "description": "Prompt ID"
+                                                    },
+                                                    "prompt": {
+                                                        "type": "string",
+                                                        "description": "The prompt text"
+                                                    },
+                                                    "language": {
+                                                        "type": "string",
+                                                        "description": "Language code"
+                                                    },
+                                                    "geolocation": {
+                                                        "type": "string",
+                                                        "description": "Geolocation code"
+                                                    }
+                                                }
+                                            },
+                                            "description": "The saved prompts for this entity"
                                         },
                                         "trackingStarted": {
                                             "type": "boolean"
@@ -557,6 +590,128 @@
                     },
                     "400": {
                         "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/check-domain": {
+            "get": {
+                "operationId": "checkDomainAvailability",
+                "summary": "Check Domain Availability",
+                "description": "Check if a domain is available for tracking before creating an entity. Returns whether the domain is available, already in your workspace, or tracked by another user.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Domain to check (e.g., example.com or https://example.com)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Domain availability check result",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "available": {
+                                            "type": "boolean",
+                                            "description": "Whether the domain is available for tracking"
+                                        },
+                                        "reason": {
+                                            "type": "string",
+                                            "enum": [
+                                                "not_tracked",
+                                                "already_in_workspace",
+                                                "tracked_by_another_user"
+                                            ],
+                                            "description": "Reason for the availability status"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Human-readable explanation"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "available": {
+                                        "summary": "Domain is available",
+                                        "value": {
+                                            "success": true,
+                                            "available": true,
+                                            "reason": "not_tracked",
+                                            "message": "This domain is available for tracking."
+                                        }
+                                    },
+                                    "already_tracked": {
+                                        "summary": "Domain already in workspace",
+                                        "value": {
+                                            "success": true,
+                                            "available": false,
+                                            "reason": "already_in_workspace",
+                                            "message": "This domain is already tracked in your workspace."
+                                        }
+                                    },
+                                    "taken": {
+                                        "summary": "Domain tracked by another user",
+                                        "value": {
+                                            "success": true,
+                                            "available": false,
+                                            "reason": "tracked_by_another_user",
+                                            "message": "This domain is already being tracked by another user."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing domain parameter",
                         "content": {
                             "application/json": {
                                 "schema": {
