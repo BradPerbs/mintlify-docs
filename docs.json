@@ -58,7 +58,8 @@
                 "index",
                 "quick-start/quickstart",
                 "quick-start/prompts-configuration",
-                "quick-start/competitors-selection"
+                "quick-start/competitors-selection",
+                "quick-start/prompts-tab"
               ]
             },
             {
