@@ -25,58 +25,106 @@
         }
     },
     "navigation": {
-      "tabs": [
-        {
-          "tab": "Documentation",
-          "icon": "book-blank",
-          "global": {
-            "anchors": [
-              {
-                "anchor": "Blog",
-                "icon": "newspaper",
-                "color": {
-                  "light": "#070707",
-                  "dark": "#070707"
-                },
-                "href": "https://www.geogen.io/articles"
-              },
-              {
-                "anchor": "Changelog",
-                "icon": "layer-group",
-                "color": {
-                  "light": "#070707",
-                  "dark": "#070707"
-                },
-                "href": "https://www.geogen.io/changelog"
-              }
-            ]
-          },
-          "groups": [
+        "tabs": [
             {
-              "group": "General",
-              "pages": [
-                "index",
-                "quick-start/quickstart",
-                "quick-start/prompts-configuration",
-                "quick-start/prompts-tab",
-                "quick-start/responses-tab",
-                "quick-start/competitors-selection"
-              ]
+                "tab": "Documentation",
+                "icon": "book-blank",
+                "global": {
+                    "anchors": [
+                        {
+                            "anchor": "Blog",
+                            "icon": "newspaper",
+                            "color": {
+                                "light": "#070707",
+                                "dark": "#070707"
+                            },
+                            "href": "https://www.geogen.io/articles"
+                        },
+                        {
+                            "anchor": "Changelog",
+                            "icon": "layer-group",
+                            "color": {
+                                "light": "#070707",
+                                "dark": "#070707"
+                            },
+                            "href": "https://www.geogen.io/changelog"
+                        }
+                    ]
+                },
+                "groups": [
+                    {
+                        "group": "General",
+                        "pages": [
+                            "index",
+                            "quick-start/quickstart",
+                            "quick-start/prompts-configuration",
+                            "quick-start/prompts-tab",
+                            "quick-start/competitors-selection"
+                        ]
+                    },
+                    {
+                        "group": "Concepts",
+                        "pages": [
+                            "concepts/query-fanouts"
+                        ]
+                    }
+                ]
             },
             {
-              "group": "Concepts",
-              "pages": [
-                "concepts/query-fanouts"
-              ]
+                "tab": "Public APIs",
+                "icon": "code",
+                "href": "api-reference/introduction",
+                "groups": [
+                    {
+                        "group": "Overview",
+                        "pages": [
+                            "api-reference/introduction",
+                            "api-reference/authentication",
+                            "api-reference/rate-limits"
+                        ]
+                    },
+                    {
+                        "group": "Workspace",
+                        "pages": [
+                            "api-reference/workspace",
+                            "api-reference/workspace-members",
+                            "api-reference/workspace-tags"
+                        ]
+                    },
+                    {
+                        "group": "Entities",
+                        "pages": [
+                            "api-reference/entities-get",
+                            "api-reference/check-domain",
+                            "api-reference/entities-create",
+                            "api-reference/prompts-get",
+                            "api-reference/prompts-add",
+                            "api-reference/prompts-delete"
+                        ]
+                    },
+                    {
+                        "group": "Analytics",
+                        "pages": [
+                            "api-reference/competitors",
+                            "api-reference/responses",
+                            "api-reference/responses-details",
+                            "api-reference/trends-visibility",
+                            "api-reference/trends-sentiment",
+                            "api-reference/trends-citations",
+                            "api-reference/citations",
+                            "api-reference/citations-details",
+                            "api-reference/query-fanouts"
+                        ]
+                    },
+                    {
+                        "group": "Models",
+                        "pages": [
+                            "api-reference/models"
+                        ]
+                    }
+                ]
             }
-          ]
-        },
-        {
-          "tab": "Public APIs",
-          "icon": "code",
-          "href": "api-reference/introduction"
-        }
-      ]
+        ]
     },
     "footerSocials": {
         "linkedin": "https://www.linkedin.com/company/geogenai/",
