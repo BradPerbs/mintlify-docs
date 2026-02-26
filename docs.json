@@ -79,7 +79,7 @@
                 "href": "concepts/mcp-server",
                 "groups": [
                     {
-                        "group": "MCP Server",
+                        "group": "MCP",
                         "pages": [
                             "concepts/mcp-server"
                         ]
