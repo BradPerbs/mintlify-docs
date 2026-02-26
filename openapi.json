@@ -2247,6 +2247,209 @@
                 }
             }
         },
+        "/trends/citations": {
+            "get": {
+                "operationId": "getCitationsTrend",
+                "summary": "Get Citations Trend",
+                "description": "Get daily citation trend for top cited domains over time. Returns time-series data showing how many times each of the top domains was cited per day, useful for tracking citation patterns and identifying emerging or declining sources.",
+                "tags": [
+                    "Analytics"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7d",
+                                "14d",
+                                "30d"
+                            ]
+                        },
+                        "description": "Time period. Defaults to 30d if not specified."
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Custom start date (YYYY-MM-DD). Use with endDate instead of period."
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        },
+                        "description": "Custom end date (YYYY-MM-DD). Use with startDate instead of period."
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated model UUIDs"
+                    },
+                    {
+                        "name": "tags",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated tag IDs to filter prompts by"
+                    },
+                    {
+                        "name": "promptIds",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Comma-separated prompt IDs to filter by specific prompts"
+                    },
+                    {
+                        "name": "topN",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 20,
+                            "default": 10
+                        },
+                        "description": "Number of top cited domains to include in the trend. Defaults to 10, max 20."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "description": "Array of daily data points. Each object has a `day` field (YYYY-MM-DD) plus a key for each top domain name with its citation count for that day.",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "day": {
+                                                        "type": "string",
+                                                        "description": "Date in YYYY-MM-DD format"
+                                                    }
+                                                },
+                                                "additionalProperties": {
+                                                    "type": "integer",
+                                                    "description": "Citation count for a domain on this day"
+                                                }
+                                            }
+                                        },
+                                        "entities": {
+                                            "type": "array",
+                                            "description": "Metadata for each top cited domain included in the trend data.",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "entityId": {
+                                                        "type": "string",
+                                                        "nullable": true,
+                                                        "description": "Convex entity ID (if the domain is a tracked entity)"
+                                                    },
+                                                    "entityUuid": {
+                                                        "type": "string",
+                                                        "description": "Entity UUID"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Domain or entity name"
+                                                    },
+                                                    "domain": {
+                                                        "type": "string",
+                                                        "nullable": true,
+                                                        "description": "Domain URL"
+                                                    },
+                                                    "totalCitations": {
+                                                        "type": "integer",
+                                                        "description": "Total citation count for the entire period"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "period": {
+                                            "type": "string",
+                                            "description": "The period used for the query"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/query-fanouts": {
             "get": {
                 "operationId": "getQueryFanouts",
