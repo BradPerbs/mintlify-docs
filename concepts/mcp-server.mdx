@@ -19,8 +19,6 @@ With the MCP server, you can ask your AI assistant questions like *"What's my vi
 
 ## Setup
 
-Choose the setup for your preferred AI client:
-
 <Tabs>
   <Tab title="Claude Desktop">
     Edit your Claude Desktop config file:
@@ -33,7 +31,7 @@ Choose the setup for your preferred AI client:
       "mcpServers": {
         "geogen": {
           "command": "npx",
-          "args": ["-y", "@geogen/mcp-server"],
+          "args": ["-y", "@geogenio/mcp-server"],
           "env": {
             "GEOGEN_API_KEY": "your-api-key-here",
             "GEOGEN_BASE_URL": "https://api.geogen.io"
@@ -45,7 +43,7 @@ Choose the setup for your preferred AI client:
   </Tab>
   <Tab title="Claude Code">
     ```bash
-    claude mcp add geogen -- npx -y @geogen/mcp-server
+    claude mcp add geogen -- npx -y @geogenio/mcp-server
     ```
 
     Then set the environment variables:
@@ -62,7 +60,7 @@ Choose the setup for your preferred AI client:
     {
       "geogen": {
         "command": "npx",
-        "args": ["-y", "@geogen/mcp-server"],
+        "args": ["-y", "@geogenio/mcp-server"],
         "env": {
           "GEOGEN_API_KEY": "your-api-key-here",
           "GEOGEN_BASE_URL": "https://api.geogen.io"
