@@ -1,0 +1,159 @@
+---
+title: "MCP Server"
+description: "Connect your AI assistant to GeoGen using the Model Context Protocol"
+icon: "plug"
+---
+
+# GeoGen MCP Server
+
+The GeoGen MCP (Model Context Protocol) server lets AI assistants like Claude, Cursor, and Windsurf query your LLM visibility data, manage entities, and analyze trends via natural language.
+
+<Info>
+With the MCP server, you can ask your AI assistant questions like *"What's my visibility trend over the last 30 days?"* or *"Which domains are citing my brand?"* and get answers directly from your GeoGen data.
+</Info>
+
+## Prerequisites
+
+- **Node.js** v18 or higher
+- A **GeoGen API key** (from workspace Settings > API Keys)
+- Your **Convex site URL** (e.g. `https://your-app.convex.site`)
+
+## Installation
+
+### 1. Clone & Build
+
+```bash
+git clone https://github.com/nicholasoxford/GeoGen
+cd GeoGen/mcp-server
+npm install
+npm run build
+```
+
+### 2. Get Your API Key
+
+Navigate to your GeoGen workspace **Settings > API Keys** and create a new key.
+
+## Configuration
+
+Choose the setup for your preferred AI client:
+
+<Tabs>
+  <Tab title="Claude Desktop">
+    Edit your Claude Desktop config file:
+
+    - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+    ```json
+    {
+      "mcpServers": {
+        "geogen": {
+          "command": "node",
+          "args": ["/absolute/path/to/mcp-server/build/index.js"],
+          "env": {
+            "GEOGEN_API_KEY": "your-api-key-here",
+            "GEOGEN_BASE_URL": "https://your-app.convex.site"
+          }
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Claude Code">
+    ```bash
+    claude mcp add geogen -- node /absolute/path/to/mcp-server/build/index.js
+    ```
+
+    Then set environment variables in your shell or `.env` file:
+
+    ```bash
+    export GEOGEN_API_KEY="your-api-key-here"
+    export GEOGEN_BASE_URL="https://your-app.convex.site"
+    ```
+  </Tab>
+  <Tab title="Cursor / Windsurf">
+    Add to your MCP settings (see each IDE's docs for the config file location):
+
+    ```json
+    {
+      "geogen": {
+        "command": "node",
+        "args": ["/absolute/path/to/mcp-server/build/index.js"],
+        "env": {
+          "GEOGEN_API_KEY": "your-api-key-here",
+          "GEOGEN_BASE_URL": "https://your-app.convex.site"
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Available Tools
+
+Once configured, your AI assistant has access to the following tools:
+
+### Read Operations
+
+| Tool | Description |
+|------|-------------|
+| `get_entities` | List all tracked websites/entities |
+| `get_workspace` | Workspace usage, limits, and credit balance |
+| `get_workspace_members` | List team members |
+| `get_workspace_tags` | List all tags |
+| `get_models` | Available LLM models |
+| `get_entity_prompts` | Prompts with visibility and sentiment stats |
+| `get_responses` | LLM responses with mention status |
+| `get_response_details` | Detailed response data including mentions, citations, and fanouts |
+| `get_citations` | Top cited domains for an entity |
+| `get_citation_details` | Detailed URLs for a cited domain |
+| `get_competitors` | Competitor visibility leaderboard |
+| `get_citations_trend` | Daily citation trend for top cited domains |
+| `get_visibility_trend` | Visibility trend over time |
+| `get_sentiment_trend` | Sentiment trend over time |
+| `get_query_fanouts` | Web search queries LLMs perform |
+
+### Write Operations
+
+| Tool | Description |
+|------|-------------|
+| `create_entity` | Create a new tracked entity (consumes credits) |
+| `add_prompts` | Add single or bulk prompts to an entity |
+| `delete_prompt` | Delete a prompt |
+
+## Example Queries
+
+Once connected, try asking your AI assistant:
+
+<CardGroup cols={2}>
+  <Card title="Visibility Analysis" icon="chart-line">
+    *"What's the visibility trend for my website over the last 30 days?"*
+  </Card>
+  <Card title="Citation Insights" icon="quote-left">
+    *"Which domains are LLMs citing when they talk about my brand?"*
+  </Card>
+  <Card title="Competitor Intel" icon="ranking-star">
+    *"Show me the top competitors for my website"*
+  </Card>
+  <Card title="Search Patterns" icon="magnifying-glass">
+    *"What search queries are LLMs running about my entity?"*
+  </Card>
+</CardGroup>
+
+More example prompts:
+
+- *"List all my tracked entities"*
+- *"Add a new tracking prompt: 'What is the best project management tool?'"*
+- *"Give me a full SEO report comparing my entity against competitors"*
+- *"What's the sentiment trend for my brand this month?"*
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `GEOGEN_API_KEY` | Yes | Your GeoGen workspace API key |
+| `GEOGEN_BASE_URL` | Yes | Your Convex site URL (e.g. `https://your-app.convex.site`) |
+
+<Warning>
+Keep your API key secure. Never commit it to version control or share it publicly.
+</Warning>

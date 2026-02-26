@@ -74,6 +74,19 @@
                 ]
             },
             {
+                "tab": "MCP Server",
+                "icon": "plug",
+                "href": "concepts/mcp-server",
+                "groups": [
+                    {
+                        "group": "MCP Server",
+                        "pages": [
+                            "concepts/mcp-server"
+                        ]
+                    }
+                ]
+            },
+            {
                 "tab": "Public APIs",
                 "icon": "code",
                 "href": "api-reference/introduction",
