@@ -6,16 +6,18 @@ icon: "plug"
 
 # GeoGen MCP Server
 
-The GeoGen MCP (Model Context Protocol) server lets AI assistants like Claude, Cursor, and Windsurf query your LLM visibility data, manage entities, and analyze trends via natural language.
+The GeoGen MCP (Model Context Protocol) server lets AI assistants like Claude, Cursor, Windsurf, GitHub Copilot, and OpenAI agents query your LLM visibility data, manage entities, and analyze trends via natural language.
 
 <Info>
 With the MCP server, you can ask your AI assistant questions like *"What's my visibility trend over the last 30 days?"* or *"Which domains are citing my brand?"* and get answers directly from your GeoGen data.
 </Info>
 
+You can connect via **local (stdio)** using the npm package, or via the **hosted SSE endpoint** at `https://mcp.geogen.io/sse`.
+
 ## Prerequisites
 
-- **Node.js** v18 or higher
-- A **GeoGen API key**: go to your workspace **Settings > API Keys** to create one
+- **Node.js** v18 or higher (for stdio transport only)
+- A **GeoGen API key** — go to your workspace **Settings > API Keys** to create one
 
 ## Setup
 
@@ -68,6 +70,34 @@ With the MCP server, you can ask your AI assistant questions like *"What's my vi
       }
     }
     ```
+  </Tab>
+  <Tab title="GitHub Copilot">
+    Add to your VS Code `settings.json` or `.vscode/mcp.json`:
+
+    ```json
+    {
+      "mcp": {
+        "servers": {
+          "geogen": {
+            "type": "sse",
+            "url": "https://mcp.geogen.io/sse",
+            "headers": {
+              "x-api-key": "your-api-key-here"
+            }
+          }
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="OpenAI Agent Builder">
+    In the OpenAI Agent Builder, add a new MCP tool with the following configuration:
+
+    - **Transport type:** SSE
+    - **URL:** `https://mcp.geogen.io/sse`
+    - **Authentication:** Custom header
+      - **Header name:** `x-api-key`
+      - **Header value:** Your GeoGen API key
   </Tab>
 </Tabs>
 
