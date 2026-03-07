@@ -1189,6 +1189,117 @@
                 }
             }
         },
+        "/entities/tracking-status": {
+            "get": {
+                "operationId": "getEntityTrackingStatus",
+                "summary": "Get Tracking Status",
+                "description": "Get the mention check status for an entity. Returns when the last check completed, when the next check is scheduled, and whether a check is currently in progress. Useful for syncing — poll this endpoint to know when new data is available.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tracking status retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "scheduled": {
+                                                    "type": "boolean",
+                                                    "description": "Whether the entity has a tracking schedule"
+                                                },
+                                                "lastCheckCompletedAt": {
+                                                    "type": "string",
+                                                    "nullable": true,
+                                                    "format": "date-time",
+                                                    "description": "ISO timestamp of the last completed mention check, or null if no check has completed yet"
+                                                },
+                                                "nextCheckScheduledAt": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "description": "ISO timestamp of the next scheduled mention check"
+                                                },
+                                                "isProcessing": {
+                                                    "type": "boolean",
+                                                    "description": "Whether a mention check is currently in progress"
+                                                },
+                                                "frequencyHours": {
+                                                    "type": "number",
+                                                    "description": "How often mention checks run (in hours)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "scheduled": {
+                                        "summary": "Entity with active tracking",
+                                        "value": {
+                                            "success": true,
+                                            "data": {
+                                                "scheduled": true,
+                                                "lastCheckCompletedAt": "2026-03-06T10:00:00.000Z",
+                                                "nextCheckScheduledAt": "2026-03-07T10:00:00.000Z",
+                                                "isProcessing": false,
+                                                "frequencyHours": 24
+                                            }
+                                        }
+                                    },
+                                    "not_scheduled": {
+                                        "summary": "Entity without tracking schedule",
+                                        "value": {
+                                            "success": true,
+                                            "data": {
+                                                "scheduled": false,
+                                                "message": "No tracking schedule found for this entity"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found in this workspace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/entities/citations": {
             "get": {
                 "operationId": "getEntityCitations",

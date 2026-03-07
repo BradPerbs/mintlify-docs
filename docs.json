@@ -79,7 +79,7 @@
                 "href": "concepts/mcp-server",
                 "groups": [
                     {
-                        "group": "MCP",
+                        "group": "MCP Server",
                         "pages": [
                             "concepts/mcp-server"
                         ]
@@ -115,7 +115,8 @@
                             "api-reference/entities-create",
                             "api-reference/prompts-get",
                             "api-reference/prompts-add",
-                            "api-reference/prompts-delete"
+                            "api-reference/prompts-delete",
+                            "api-reference/tracking-status"
                         ]
                     },
                     {
