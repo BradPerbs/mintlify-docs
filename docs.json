@@ -115,6 +115,7 @@
                             "api-reference/entities-create",
                             "api-reference/prompts-get",
                             "api-reference/prompts-add",
+                            "api-reference/prompts-update",
                             "api-reference/prompts-delete",
                             "api-reference/tracking-status"
                         ]

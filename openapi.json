@@ -1131,6 +1131,114 @@
                 }
             }
         },
+        "/entities/updateprompt": {
+            "patch": {
+                "operationId": "updatePrompt",
+                "summary": "Update Prompt",
+                "description": "Update an existing prompt's text, language, or geolocation.",
+                "tags": [
+                    "Entities"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "promptId"
+                                ],
+                                "properties": {
+                                    "promptId": {
+                                        "type": "string",
+                                        "description": "Prompt ID to update"
+                                    },
+                                    "prompt": {
+                                        "type": "string",
+                                        "description": "New prompt text"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "description": "New language code (e.g., 'en', 'fr', 'de')"
+                                    },
+                                    "geolocation": {
+                                        "type": "string",
+                                        "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "update_text": {
+                                    "summary": "Update prompt text",
+                                    "value": {
+                                        "promptId": "abc123def456...",
+                                        "prompt": "What are the best tools for SEO in 2026?"
+                                    }
+                                },
+                                "update_language_geo": {
+                                    "summary": "Update language and geolocation",
+                                    "value": {
+                                        "promptId": "abc123def456...",
+                                        "language": "fr",
+                                        "geolocation": "fr"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Prompt updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "prompt": {
+                                            "$ref": "#/components/schemas/Prompt"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - invalid input",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Prompt not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/entities/deleteprompt": {
             "delete": {
                 "operationId": "deletePrompt",
