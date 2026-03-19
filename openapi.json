@@ -738,6 +738,219 @@
                         }
                     }
                 }
+            },
+            "patch": {
+                "operationId": "updateEntity",
+                "summary": "Update Entity",
+                "description": "Update an existing entity's properties such as name, domain, description, language, geolocation, or tracked models. Only the fields provided in the request body will be updated.",
+                "tags": [
+                    "Entities"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "entityId"
+                                ],
+                                "properties": {
+                                    "entityId": {
+                                        "type": "string",
+                                        "description": "The ID of the entity to update"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "New entity display name"
+                                    },
+                                    "target": {
+                                        "type": "string",
+                                        "description": "New website domain (e.g., example.com)"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "New entity description"
+                                    },
+                                    "language": {
+                                        "type": "string",
+                                        "description": "New language code (e.g., 'en', 'fr', 'de')"
+                                    },
+                                    "geolocation": {
+                                        "type": "string",
+                                        "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
+                                    },
+                                    "models": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "New array of model UUIDs from /v1/models. Must contain at least 1 model."
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "update_name_and_description": {
+                                    "summary": "Update name and description",
+                                    "value": {
+                                        "entityId": "abc123def456",
+                                        "name": "Updated Website Name",
+                                        "description": "Updated description for the entity"
+                                    }
+                                },
+                                "update_domain": {
+                                    "summary": "Update domain",
+                                    "value": {
+                                        "entityId": "abc123def456",
+                                        "target": "newdomain.com"
+                                    }
+                                },
+                                "update_models": {
+                                    "summary": "Update tracked models",
+                                    "value": {
+                                        "entityId": "abc123def456",
+                                        "models": [
+                                            "model-uuid-1",
+                                            "model-uuid-2",
+                                            "model-uuid-3"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Entity updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "description": "Entity ID"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "Entity name"
+                                                },
+                                                "target": {
+                                                    "type": "string",
+                                                    "description": "Entity domain/URL"
+                                                },
+                                                "targetType": {
+                                                    "type": "string",
+                                                    "enum": ["url", "term"],
+                                                    "description": "Type of target"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "description": "Entity description"
+                                                },
+                                                "language": {
+                                                    "type": "string",
+                                                    "description": "Language code"
+                                                },
+                                                "geolocation": {
+                                                    "type": "string",
+                                                    "description": "Geolocation code"
+                                                },
+                                                "models": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "description": "Selected model UUIDs"
+                                                },
+                                                "isActive": {
+                                                    "type": "boolean",
+                                                    "description": "Whether the entity is active"
+                                                },
+                                                "createdAt": {
+                                                    "type": "number",
+                                                    "description": "Creation timestamp"
+                                                },
+                                                "updatedAt": {
+                                                    "type": "number",
+                                                    "description": "Last update timestamp"
+                                                }
+                                            }
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Domain conflict",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/entities/check-domain": {
@@ -1135,7 +1348,7 @@
             "patch": {
                 "operationId": "updatePrompt",
                 "summary": "Update Prompt",
-                "description": "Update an existing prompt's text, language, or geolocation.",
+                "description": "Update an existing prompt's text, language, geolocation, or active status. Set `isActive` to `false` to pause tracking for a prompt without deleting it.",
                 "tags": [
                     "Entities"
                 ],
@@ -1164,6 +1377,10 @@
                                     "geolocation": {
                                         "type": "string",
                                         "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
+                                    },
+                                    "isActive": {
+                                        "type": "boolean",
+                                        "description": "Set to false to pause tracking for this prompt, or true to re-activate it"
                                     }
                                 }
                             },
@@ -1181,6 +1398,13 @@
                                         "promptId": "abc123def456...",
                                         "language": "fr",
                                         "geolocation": "fr"
+                                    }
+                                },
+                                "deactivate_prompt": {
+                                    "summary": "Deactivate a prompt",
+                                    "value": {
+                                        "promptId": "abc123def456...",
+                                        "isActive": false
                                     }
                                 }
                             }
