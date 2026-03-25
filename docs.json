@@ -114,6 +114,7 @@
                             "api-reference/check-domain",
                             "api-reference/entities-create",
                             "api-reference/entities-update",
+                            "api-reference/entities-remove",
                             "api-reference/prompts-get",
                             "api-reference/prompts-add",
                             "api-reference/prompts-update",

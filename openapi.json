@@ -951,6 +951,126 @@
                         }
                     }
                 }
+            },
+            "delete": {
+                "operationId": "removeEntity",
+                "summary": "Remove Entity",
+                "description": "Remove an entity from your workspace. This detaches the entity from your workspace and cleans up all associated data including sharing records, metadata, schedules, and competitor selections.\n\n**Important:** The entity itself and its historical data (prompts, responses, mentions, citations) are preserved and not deleted. The entity becomes orphaned and can be reclaimed if another user adds the same target.",
+                "tags": [
+                    "Entities"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The ID of the entity to remove"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Entity removed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "description": "Confirmation message"
+                                        },
+                                        "deleted": {
+                                            "type": "object",
+                                            "description": "Counts of deleted records",
+                                            "properties": {
+                                                "sharedEntities": {
+                                                    "type": "number",
+                                                    "description": "Number of sharing records removed"
+                                                },
+                                                "metadata": {
+                                                    "type": "number",
+                                                    "description": "Number of metadata records removed"
+                                                },
+                                                "schedule": {
+                                                    "type": "number",
+                                                    "description": "Number of schedule records removed"
+                                                },
+                                                "competitorSelections": {
+                                                    "type": "number",
+                                                    "description": "Number of competitor selection records removed"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true,
+                                    "message": "Entity has been removed from your workspace. The entity data is preserved.",
+                                    "deleted": {
+                                        "sharedEntities": 0,
+                                        "metadata": 1,
+                                        "schedule": 1,
+                                        "competitorSelections": 2
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request - missing or invalid entityId",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found in this workspace",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/entities/check-domain": {
