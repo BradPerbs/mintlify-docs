@@ -119,7 +119,9 @@
                             "api-reference/prompts-add",
                             "api-reference/prompts-update",
                             "api-reference/prompts-delete",
-                            "api-reference/tracking-status"
+                            "api-reference/tracking-status",
+                            "api-reference/name-request-submit",
+                            "api-reference/name-request-status"
                         ]
                     },
                     {
