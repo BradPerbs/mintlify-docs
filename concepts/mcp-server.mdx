@@ -12,21 +12,175 @@ The GeoGen MCP (Model Context Protocol) server lets AI assistants like Claude, C
 With the MCP server, you can ask your AI assistant questions like *"What's my visibility trend over the last 30 days?"* or *"Which domains are citing my brand?"* and get answers directly from your GeoGen data.
 </Info>
 
-You can connect via **local (stdio)** using the npm package, or via the **hosted SSE endpoint** at `https://mcp.geogen.io/sse`.
-
 ## Prerequisites
 
-- **Node.js** v18 or higher (for stdio transport only)
-- A **GeoGen API key** — go to your workspace **Settings > API Keys** to create one
+- A **GeoGen API key** — go to **Settings → Workspaces → Your Workspace → API Keys** to create one
+- **Node.js** v18 or higher — download from [nodejs.org](https://nodejs.org) (required for Claude Desktop, Claude Code, Cursor, and Windsurf)
+
+<Tip>
+**Not sure if you have Node.js?** Open your terminal (Mac: Terminal app, Windows: Command Prompt) and type `node -v`. If you see a version number like `v18.0.0` or higher, you're good. If you get an error, [download and install it first](https://nodejs.org).
+</Tip>
 
 ## Setup
 
+Choose your AI assistant below and follow the step-by-step instructions.
+
 <Tabs>
   <Tab title="Claude Desktop">
-    Edit your Claude Desktop config file:
+    Claude Desktop stores its configuration in a JSON file. We need to find it, open it, and add the GeoGen MCP server config to it.
 
-    - **macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-    - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+    ### Step 1: Open the config file
+
+    <Tabs>
+      <Tab title="macOS">
+        The config file is in a **hidden folder** that doesn't show up in Finder by default. To get there:
+
+        1. Open **Finder**
+        2. Press **Cmd + Shift + G** — this opens a "Go to Folder" dialog
+        3. Paste this path and press Enter:
+        ```
+        ~/Library/Application Support/Claude
+        ```
+        4. Find and open `claude_desktop_config.json` in a text editor (right-click > Open With > TextEdit, or any code editor)
+
+        <Note>
+        If the file doesn't exist yet, create a new file called `claude_desktop_config.json` in that folder.
+        </Note>
+      </Tab>
+      <Tab title="Windows">
+        The config file is in your AppData folder, which is hidden by default. To get there:
+
+        1. Press **Win + R** to open the Run dialog
+        2. Paste this path and press Enter:
+        ```
+        %APPDATA%\Claude
+        ```
+        3. Find and open `claude_desktop_config.json` in a text editor (right-click > Open With > Notepad, or any code editor)
+
+        <Note>
+        If the file doesn't exist yet, create a new file called `claude_desktop_config.json` in that folder.
+        </Note>
+      </Tab>
+    </Tabs>
+
+    ### Step 2: Add the GeoGen config
+
+    **If the file is empty or doesn't exist yet**, paste this entire block and replace `your-api-key-here` with your actual GeoGen API key:
+
+    ```json {7}
+    {
+      "mcpServers": {
+        "geogen": {
+          "command": "npx",
+          "args": ["-y", "@geogenio/mcp-server"],
+          "env": {
+            "GEOGEN_API_KEY": "your-api-key-here",
+            "GEOGEN_BASE_URL": "https://api.geogen.io"
+          }
+        }
+      }
+    }
+    ```
+
+    **If the file already has content** (which is common), you need to merge the GeoGen config into it. Your file probably looks something like this:
+
+    ```json
+    {
+      "someExistingSetting": "someValue"
+    }
+    ```
+
+    Add a **comma** after the last existing setting, then add the `mcpServers` block before the final closing brace:
+
+    ```json {8}
+    {
+      "someExistingSetting": "someValue",
+      "mcpServers": {
+        "geogen": {
+          "command": "npx",
+          "args": ["-y", "@geogenio/mcp-server"],
+          "env": {
+            "GEOGEN_API_KEY": "your-api-key-here",
+            "GEOGEN_BASE_URL": "https://api.geogen.io"
+          }
+        }
+      }
+    }
+    ```
+
+    <Warning>
+    **Don't forget the comma!** JSON requires a comma between each setting. Missing it is the most common cause of errors. Make sure there's a comma after every item except the last one before a closing brace `}` or bracket `]`.
+    </Warning>
+
+    If you **already have other MCP servers** configured, add GeoGen inside the existing `mcpServers` block with a comma:
+
+    ```json {10}
+    {
+      "mcpServers": {
+        "some-other-server": {
+          "command": "..."
+        },
+        "geogen": {
+          "command": "npx",
+          "args": ["-y", "@geogenio/mcp-server"],
+          "env": {
+            "GEOGEN_API_KEY": "your-api-key-here",
+            "GEOGEN_BASE_URL": "https://api.geogen.io"
+          }
+        }
+      }
+    }
+    ```
+
+    ### Step 3: Replace the API key
+
+    Replace `your-api-key-here` with your actual GeoGen API key (from **Settings > API Keys** in the GeoGen dashboard). Keep the quotes around it.
+
+    ### Step 4: Save and restart
+
+    1. Save the file
+    2. Fully quit Claude Desktop (not just close the window)
+    3. Reopen Claude Desktop
+    4. Look for the **MCP plug icon** (🔌) in the chat input area — click it to confirm GeoGen is listed and connected
+  </Tab>
+
+  <Tab title="Claude Code">
+    Claude Code is a command-line tool, so setup is a single terminal command.
+
+    Run this in your terminal, replacing `your-api-key-here` with your actual API key:
+
+    ```bash
+    claude mcp add geogen \
+      -e GEOGEN_API_KEY=your-api-key-here \
+      -e GEOGEN_BASE_URL=https://api.geogen.io \
+      -- npx -y @geogenio/mcp-server
+    ```
+
+    Verify it was added:
+
+    ```bash
+    claude mcp list
+    ```
+
+    You should see `geogen` in the output. Start a new conversation to begin using it.
+
+    <Warning>
+    **Do not use `export`** to set the environment variables in your shell. The MCP server runs in its own process and won't see shell exports. Always pass them with the `-e` flag as shown above.
+    </Warning>
+  </Tab>
+
+  <Tab title="Cursor">
+    Cursor reads MCP configuration from a JSON file in your project or home directory.
+
+    ### Step 1: Create or edit the config file
+
+    Open or create the file `.cursor/mcp.json` in one of these locations:
+    - **Project-level** (only this project): `.cursor/mcp.json` in your project's root folder
+    - **Global** (all projects): `~/.cursor/mcp.json` in your home folder
+
+    ### Step 2: Add the GeoGen config
+
+    Paste the following (or merge it into your existing config — see the merging guidance in the Claude Desktop tab if you need help):
 
     ```json
     {
@@ -42,37 +196,84 @@ You can connect via **local (stdio)** using the npm package, or via the **hosted
       }
     }
     ```
-  </Tab>
-  <Tab title="Claude Code">
-    ```bash
-    claude mcp add geogen -- npx -y @geogenio/mcp-server
-    ```
 
-    Then set the environment variables:
+    ### Step 3: Replace the API key
 
-    ```bash
-    export GEOGEN_API_KEY="your-api-key-here"
-    export GEOGEN_BASE_URL="https://api.geogen.io"
-    ```
+    Replace `your-api-key-here` with your actual GeoGen API key.
+
+    ### Step 4: Verify
+
+    1. Save the file
+    2. Open **Cursor Settings > MCP**
+    3. GeoGen should appear with a **green status indicator**
+
+    If it doesn't appear, restart Cursor.
   </Tab>
-  <Tab title="Cursor / Windsurf">
-    Add to your MCP settings (see each IDE's docs for the config file location):
+
+  <Tab title="Windsurf">
+    Windsurf reads MCP configuration from a central config file.
+
+    ### Step 1: Open the config file
+
+    <Tabs>
+      <Tab title="macOS">
+        1. Open **Finder**
+        2. Press **Cmd + Shift + G**
+        3. Paste this path and press Enter:
+        ```
+        ~/.codeium/windsurf
+        ```
+        4. Open `mcp_config.json` in a text editor. If it doesn't exist, create it.
+      </Tab>
+      <Tab title="Windows">
+        1. Press **Win + R** to open the Run dialog
+        2. Paste this path and press Enter:
+        ```
+        %USERPROFILE%\.codeium\windsurf
+        ```
+        3. Open `mcp_config.json` in a text editor. If it doesn't exist, create it.
+      </Tab>
+    </Tabs>
+
+    ### Step 2: Add the GeoGen config
+
+    Paste the following (or merge it into your existing config — see the merging guidance in the Claude Desktop tab if you need help):
 
     ```json
     {
-      "geogen": {
-        "command": "npx",
-        "args": ["-y", "@geogenio/mcp-server"],
-        "env": {
-          "GEOGEN_API_KEY": "your-api-key-here",
-          "GEOGEN_BASE_URL": "https://api.geogen.io"
+      "mcpServers": {
+        "geogen": {
+          "command": "npx",
+          "args": ["-y", "@geogenio/mcp-server"],
+          "env": {
+            "GEOGEN_API_KEY": "your-api-key-here",
+            "GEOGEN_BASE_URL": "https://api.geogen.io"
+          }
         }
       }
     }
     ```
+
+    ### Step 3: Replace the API key
+
+    Replace `your-api-key-here` with your actual GeoGen API key.
+
+    ### Step 4: Verify
+
+    1. Save the file and restart Windsurf
+    2. Go to **Windsurf Settings > Cascade > MCP** — GeoGen should appear in the list
   </Tab>
+
   <Tab title="GitHub Copilot">
-    Add to your VS Code `settings.json` or `.vscode/mcp.json`:
+    GitHub Copilot connects to GeoGen through a remote cloud connection — no Node.js required on your machine.
+
+    ### Step 1: Open your VS Code settings
+
+    You can add the config to either:
+    - **VS Code settings**: Open the command palette (Cmd/Ctrl + Shift + P) > "Preferences: Open User Settings (JSON)"
+    - **Project-level**: Create or edit `.vscode/mcp.json` in your project root
+
+    ### Step 2: Add the GeoGen config
 
     ```json
     {
@@ -89,15 +290,30 @@ You can connect via **local (stdio)** using the npm package, or via the **hosted
       }
     }
     ```
-  </Tab>
-  <Tab title="OpenAI Agent Builder">
-    In the OpenAI Agent Builder, add a new MCP tool with the following configuration:
 
-    - **Transport type:** SSE
-    - **URL:** `https://mcp.geogen.io/sse`
-    - **Authentication:** Custom header
-      - **Header name:** `x-api-key`
-      - **Header value:** Your GeoGen API key
+    If adding to an existing `settings.json`, merge the `"mcp"` block into your existing settings (add a comma before it, just like any other setting).
+
+    ### Step 3: Replace the API key
+
+    Replace `your-api-key-here` with your actual GeoGen API key.
+
+    <Note>
+    GitHub Copilot connects to GeoGen's cloud server directly, so your API key is sent as a secure header with each request. You don't need Node.js installed for this method.
+    </Note>
+  </Tab>
+
+  <Tab title="OpenAI Agents">
+    OpenAI agents connect to GeoGen through a remote cloud connection.
+
+    In the OpenAI Agent Builder, add a new MCP tool with the following settings:
+
+    | Setting | Value |
+    |---------|-------|
+    | **Transport type** | SSE |
+    | **URL** | `https://mcp.geogen.io/sse` |
+    | **Authentication** | Custom header |
+    | **Header name** | `x-api-key` |
+    | **Header value** | Your GeoGen API key |
   </Tab>
 </Tabs>
 
@@ -165,8 +381,62 @@ More example prompts:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `GEOGEN_API_KEY` | Yes | Your GeoGen workspace API key |
-| `GEOGEN_BASE_URL` | Yes | GeoGen API URL (`https://api.geogen.io`) |
+| `GEOGEN_BASE_URL` | Yes | GeoGen API URL — always `https://api.geogen.io` |
 
 <Warning>
 Keep your API key secure. Never commit it to version control or share it publicly.
 </Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Config file not found / folder is hidden">
+    On **Mac**, the `Library` folder is hidden by default in Finder. Use **Cmd + Shift + G** and paste the path to navigate directly. On **Windows**, `%APPDATA%` is similarly hidden — press **Win + R** and paste the path to open it.
+  </Accordion>
+
+  <Accordion title="Claude Desktop shows an error after editing the config">
+    The most common cause is a **JSON formatting error** — usually a missing or extra comma. JSON is strict about commas: every item needs a comma after it *except* the last item before a closing `}` or `]`. Try pasting your config into [jsonlint.com](https://jsonlint.com) to check for syntax errors.
+  </Accordion>
+
+  <Accordion title="Server not showing up in my client">
+    - Make sure you saved the config file (not just edited it)
+    - Fully **restart** your client — closing the window isn't always enough (especially Claude Desktop)
+    - Confirm Node.js v18+ is installed: open a terminal and run `node -v`
+  </Accordion>
+
+  <Accordion title="'npx: command not found' error">
+    `npx` comes bundled with Node.js. Install or update Node.js from [nodejs.org](https://nodejs.org) (v18 or higher). If you use a version manager like nvm or fnm, make sure the right version is active in your shell.
+  </Accordion>
+
+  <Accordion title="Authentication or 401 errors">
+    - Verify your API key is correct — go to **Settings → Workspaces → Your Workspace → API Keys** in the GeoGen dashboard and copy it again
+    - Make sure the key is inside quotes in the config file: `"your-key-here"` not `your-key-here`
+    - Check that you didn't accidentally include extra spaces around the key
+  </Accordion>
+
+  <Accordion title="Tools appear but return no data">
+    Make sure you have at least one tracked entity in your GeoGen workspace. Most tools need an entity to return results.
+  </Accordion>
+
+  <Accordion title="Claude Code: environment variables not working">
+    Do **not** use `export` in your shell — the MCP server runs in its own separate process. Pass variables with the `-e` flag:
+    ```bash
+    claude mcp add geogen \
+      -e GEOGEN_API_KEY=your-api-key-here \
+      -e GEOGEN_BASE_URL=https://api.geogen.io \
+      -- npx -y @geogenio/mcp-server
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Advanced: Connection Methods Explained
+
+<Expandable title="What are stdio and SSE?">
+GeoGen's MCP server supports two connection methods. You don't need to understand these to get set up — the instructions above handle it for you — but here's what's happening behind the scenes:
+
+**Local (stdio)** — Used by Claude Desktop, Claude Code, Cursor, and Windsurf. Your client downloads and runs the GeoGen MCP server package on your computer. Communication happens locally between your AI client and the server process. Your API key stays on your machine.
+
+**Remote (SSE)** — Used by GitHub Copilot and OpenAI agents. Instead of running anything locally, your client connects to GeoGen's hosted server at `mcp.geogen.io`. Your API key is sent as a secure header with each request. No Node.js needed.
+
+Both methods give you access to the same tools and data.
+</Expandable>

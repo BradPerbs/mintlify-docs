@@ -15,7 +15,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      description: API key authentication. Format: Bearer wsk_your_api_key
+      description: "API key authentication. Format: Bearer wsk_your_api_key"
 
   schemas:
     Error:
