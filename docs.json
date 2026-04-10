@@ -125,6 +125,14 @@
                         ]
                     },
                     {
+                        "group": "Actions",
+                        "pages": [
+                            "api-reference/actions-get",
+                            "api-reference/actions-dismiss",
+                            "api-reference/actions-update-status"
+                        ]
+                    },
+                    {
                         "group": "Analytics",
                         "pages": [
                             "api-reference/competitors",

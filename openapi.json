@@ -3465,6 +3465,393 @@
                     }
                 }
             }
+        },
+        "/entities/actions": {
+            "get": {
+                "operationId": "getEntityActions",
+                "summary": "Get Actions",
+                "description": "Get AI-generated actionable recommendations and their associated tasks for an entity. Actionables are SEO improvement suggestions generated after each mention check. Tasks are actionables that have been moved to the kanban board for tracking.",
+                "tags": [
+                    "Actions"
+                ],
+                "parameters": [
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Entity ID"
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "dismissed",
+                                "in_task"
+                            ]
+                        },
+                        "description": "Filter actionables by status (default: all)"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Actions retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "actionables": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "Actionable ID"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "description": "Actionable title"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Detailed description of the recommendation"
+                                                            },
+                                                            "category": {
+                                                                "type": "string",
+                                                                "enum": ["problem", "visibility", "citation", "on-page"],
+                                                                "description": "Category of the actionable"
+                                                            },
+                                                            "priority": {
+                                                                "type": "string",
+                                                                "enum": ["high", "medium", "low"],
+                                                                "description": "Priority level"
+                                                            },
+                                                            "sourceType": {
+                                                                "type": "string",
+                                                                "description": "Source that generated this actionable (e.g. negative_sentiment, low_visibility)"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "enum": ["active", "dismissed", "in_task"],
+                                                                "description": "Current status"
+                                                            },
+                                                            "metadata": {
+                                                                "type": "object",
+                                                                "nullable": true,
+                                                                "description": "Rich metadata (citation URLs, links, etc.)"
+                                                            },
+                                                            "createdAt": {
+                                                                "type": "number",
+                                                                "description": "Creation timestamp (ms)"
+                                                            },
+                                                            "updatedAt": {
+                                                                "type": "number",
+                                                                "description": "Last updated timestamp (ms)"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "tasks": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "Task ID"
+                                                            },
+                                                            "title": {
+                                                                "type": "string",
+                                                                "description": "Task title"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "description": "Task description"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": ["on-page", "off-page"],
+                                                                "description": "Task type"
+                                                            },
+                                                            "priority": {
+                                                                "type": "string",
+                                                                "enum": ["high", "medium", "low"],
+                                                                "description": "Priority level"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "enum": ["not_started", "in_progress", "in_review", "done"],
+                                                                "description": "Task status on the kanban board"
+                                                            },
+                                                            "assignees": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                },
+                                                                "description": "Assigned user IDs"
+                                                            },
+                                                            "sortOrder": {
+                                                                "type": "number",
+                                                                "nullable": true,
+                                                                "description": "Position within the status column"
+                                                            },
+                                                            "actionableId": {
+                                                                "type": "string",
+                                                                "nullable": true,
+                                                                "description": "Source actionable ID (if created from one)"
+                                                            },
+                                                            "createdAt": {
+                                                                "type": "number",
+                                                                "description": "Creation timestamp (ms)"
+                                                            },
+                                                            "updatedAt": {
+                                                                "type": "number",
+                                                                "description": "Last updated timestamp (ms)"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "counts": {
+                                            "type": "object",
+                                            "properties": {
+                                                "actionables": {
+                                                    "type": "number"
+                                                },
+                                                "tasks": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true,
+                                    "data": {
+                                        "actionables": [
+                                            {
+                                                "id": "abc123",
+                                                "title": "Improve presence on Reddit r/webdev",
+                                                "description": "Your brand is rarely mentioned in r/webdev discussions. Consider contributing helpful content to increase visibility.",
+                                                "category": "citation",
+                                                "priority": "high",
+                                                "sourceType": "low_visibility",
+                                                "status": "active",
+                                                "metadata": null,
+                                                "createdAt": 1712345678000,
+                                                "updatedAt": 1712345678000
+                                            }
+                                        ],
+                                        "tasks": [
+                                            {
+                                                "id": "task456",
+                                                "title": "Address negative sentiment on Stack Overflow",
+                                                "description": "Multiple AI models reference negative reviews. Create documentation to address common issues.",
+                                                "type": "off-page",
+                                                "priority": "medium",
+                                                "status": "in_progress",
+                                                "assignees": ["user789"],
+                                                "sortOrder": 0,
+                                                "actionableId": "abc789",
+                                                "createdAt": 1712345678000,
+                                                "updatedAt": 1712345678000
+                                            }
+                                        ]
+                                    },
+                                    "counts": {
+                                        "actionables": 1,
+                                        "tasks": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — missing entityId parameter",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Entity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/actions/dismiss": {
+            "post": {
+                "operationId": "dismissActionable",
+                "summary": "Dismiss Actionable",
+                "description": "Dismiss an actionable recommendation so it no longer appears in the active feed. Dismissed actionables free up slots for new ones to be generated on the next mention check (max 30 active per entity).",
+                "tags": [
+                    "Actions"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["actionableId"],
+                                "properties": {
+                                    "actionableId": {
+                                        "type": "string",
+                                        "description": "The actionable ID to dismiss"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Actionable dismissed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — missing actionableId",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entities/actions/update-status": {
+            "post": {
+                "operationId": "updateTaskStatus",
+                "summary": "Update Task Status",
+                "description": "Update the status of a task on the kanban board. Move tasks through the workflow: not_started → in_progress → in_review → done.",
+                "tags": [
+                    "Actions"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["taskId", "status"],
+                                "properties": {
+                                    "taskId": {
+                                        "type": "string",
+                                        "description": "The task ID to update"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": ["not_started", "in_progress", "in_review", "done"],
+                                        "description": "New status for the task"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Task status updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "example": {
+                                    "success": true
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — missing fields or invalid status",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

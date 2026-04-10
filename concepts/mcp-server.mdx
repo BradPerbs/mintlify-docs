@@ -341,6 +341,7 @@ Once configured, your AI assistant has access to the following tools:
 | `get_visibility_trend` | Visibility trend over time |
 | `get_sentiment_trend` | Sentiment trend over time |
 | `get_query_fanouts` | Web search queries LLMs perform |
+| `get_entity_actions` | AI-generated actionable recommendations and tasks |
 
 ### Write Operations
 
@@ -349,6 +350,8 @@ Once configured, your AI assistant has access to the following tools:
 | `create_entity` | Create a new tracked entity (consumes credits) |
 | `add_prompts` | Add single or bulk prompts to an entity |
 | `delete_prompt` | Delete a prompt |
+| `dismiss_actionable` | Dismiss an actionable recommendation |
+| `update_task_status` | Move a task through the kanban workflow |
 
 ## Example Queries
 
@@ -366,6 +369,9 @@ Once connected, try asking your AI assistant:
   </Card>
   <Card title="Search Patterns" icon="magnifying-glass">
     *"What search queries are LLMs running about my entity?"*
+  </Card>
+  <Card title="Action Items" icon="list-check">
+    *"What actionable recommendations do I have for my website?"*
   </Card>
 </CardGroup>
 
