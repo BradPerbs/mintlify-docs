@@ -517,27 +517,77 @@ paths:
   /entities/deleteprompt:
     delete:
       operationId: deletePrompt
-      summary: Delete Prompt
-      description: Delete a prompt.
+      summary: Delete Prompt(s)
+      description: |
+        Delete one or more prompts. Supply either `promptId` (single) or `promptIds`
+        (batch) via query parameters, or a JSON body with `{ "promptId": "..." }`
+        or `{ "promptIds": ["...", "..."] }`. Maximum 100 IDs per batch request.
       tags:
         - Entities
       parameters:
         - name: promptId
           in: query
-          required: true
+          required: false
           schema:
             type: string
-          description: Prompt ID to delete
+          description: Single prompt ID to delete (mutually exclusive with promptIds).
+        - name: promptIds
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Comma-separated list of prompt IDs to delete (max 100).
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    promptId:
+                      type: string
+                      description: Single prompt ID to delete.
+                - type: object
+                  properties:
+                    promptIds:
+                      type: array
+                      items:
+                        type: string
+                      maxItems: 100
+                      description: Array of prompt IDs to delete.
       responses:
         '200':
-          description: Prompt deleted successfully
+          description: Prompt(s) deleted successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
+                oneOf:
+                  - type: object
+                    description: Single-prompt response (when `promptId` was supplied).
+                    properties:
+                      success:
+                        type: boolean
+                  - type: object
+                    description: Batch response (when `promptIds` was supplied).
+                    properties:
+                      success:
+                        type: boolean
+                      deletedCount:
+                        type: integer
+                      requestedCount:
+                        type: integer
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            promptId:
+                              type: string
+                            success:
+                              type: boolean
+                            error:
+                              type: string
         '401':
           description: Unauthorized
           content:
