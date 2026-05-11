@@ -1462,8 +1462,8 @@
         "/entities/updateprompt": {
             "patch": {
                 "operationId": "updatePrompt",
-                "summary": "Update Prompt",
-                "description": "Update an existing prompt's text, language, geolocation, or active status. Set `isActive` to `false` to pause tracking for a prompt without deleting it.",
+                "summary": "Update Prompt(s)",
+                "description": "Update one or more prompts in a single request.\n\n**Single mode** — supply `promptId` plus any subset of editable fields (`prompt`, `language`, `geolocation`, `isActive`). Returns the updated prompt.\n\n**Batch mode** — supply `updates: [...]` where each entry carries its own `promptId` and the fields to change for that prompt. Different prompts can receive different patches in the same call. Maximum 100 updates per request.\n\nSet `isActive` to `false` to pause tracking for a prompt without deleting it.",
                 "tags": [
                     "Entities"
                 ],
@@ -1472,43 +1472,91 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "required": [
-                                    "promptId"
-                                ],
-                                "properties": {
-                                    "promptId": {
-                                        "type": "string",
-                                        "description": "Prompt ID to update"
+                                "oneOf": [
+                                    {
+                                        "title": "Single update",
+                                        "type": "object",
+                                        "required": [
+                                            "promptId"
+                                        ],
+                                        "properties": {
+                                            "promptId": {
+                                                "type": "string",
+                                                "description": "Prompt ID to update"
+                                            },
+                                            "prompt": {
+                                                "type": "string",
+                                                "description": "New prompt text"
+                                            },
+                                            "language": {
+                                                "type": "string",
+                                                "description": "New language code (e.g., 'en', 'fr', 'de')"
+                                            },
+                                            "geolocation": {
+                                                "type": "string",
+                                                "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
+                                            },
+                                            "isActive": {
+                                                "type": "boolean",
+                                                "description": "Set to false to pause tracking for this prompt, or true to re-activate it"
+                                            }
+                                        }
                                     },
-                                    "prompt": {
-                                        "type": "string",
-                                        "description": "New prompt text"
-                                    },
-                                    "language": {
-                                        "type": "string",
-                                        "description": "New language code (e.g., 'en', 'fr', 'de')"
-                                    },
-                                    "geolocation": {
-                                        "type": "string",
-                                        "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
-                                    },
-                                    "isActive": {
-                                        "type": "boolean",
-                                        "description": "Set to false to pause tracking for this prompt, or true to re-activate it"
+                                    {
+                                        "title": "Batch update",
+                                        "type": "object",
+                                        "required": [
+                                            "updates"
+                                        ],
+                                        "properties": {
+                                            "updates": {
+                                                "type": "array",
+                                                "minItems": 1,
+                                                "maxItems": 100,
+                                                "description": "Array of per-prompt patches. Each entry must include `promptId` and at least one editable field.",
+                                                "items": {
+                                                    "type": "object",
+                                                    "required": [
+                                                        "promptId"
+                                                    ],
+                                                    "properties": {
+                                                        "promptId": {
+                                                            "type": "string",
+                                                            "description": "Prompt ID to update"
+                                                        },
+                                                        "prompt": {
+                                                            "type": "string",
+                                                            "description": "New prompt text"
+                                                        },
+                                                        "language": {
+                                                            "type": "string",
+                                                            "description": "New language code (e.g., 'en', 'fr', 'de')"
+                                                        },
+                                                        "geolocation": {
+                                                            "type": "string",
+                                                            "description": "New geolocation code (e.g., 'global', 'us', 'gb')"
+                                                        },
+                                                        "isActive": {
+                                                            "type": "boolean",
+                                                            "description": "Set to false to pause tracking for this prompt, or true to re-activate it"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
-                                }
+                                ]
                             },
                             "examples": {
                                 "update_text": {
-                                    "summary": "Update prompt text",
+                                    "summary": "Update prompt text (single)",
                                     "value": {
                                         "promptId": "abc123def456...",
                                         "prompt": "What are the best tools for SEO in 2026?"
                                     }
                                 },
                                 "update_language_geo": {
-                                    "summary": "Update language and geolocation",
+                                    "summary": "Update language and geolocation (single)",
                                     "value": {
                                         "promptId": "abc123def456...",
                                         "language": "fr",
@@ -1516,10 +1564,30 @@
                                     }
                                 },
                                 "deactivate_prompt": {
-                                    "summary": "Deactivate a prompt",
+                                    "summary": "Deactivate a prompt (single)",
                                     "value": {
                                         "promptId": "abc123def456...",
                                         "isActive": false
+                                    }
+                                },
+                                "batch_mixed": {
+                                    "summary": "Batch update with different fields per prompt",
+                                    "value": {
+                                        "updates": [
+                                            {
+                                                "promptId": "abc123def456...",
+                                                "prompt": "Rewritten prompt copy"
+                                            },
+                                            {
+                                                "promptId": "ghi789jkl012...",
+                                                "language": "fr",
+                                                "isActive": true
+                                            },
+                                            {
+                                                "promptId": "mno345pqr678...",
+                                                "isActive": false
+                                            }
+                                        ]
                                     }
                                 }
                             }
@@ -1528,19 +1596,63 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Prompt updated successfully",
+                        "description": "Prompt(s) updated successfully. Single mode returns the updated prompt; batch mode returns per-item results.",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean"
+                                    "oneOf": [
+                                        {
+                                            "title": "Single update response",
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "prompt": {
+                                                    "$ref": "#/components/schemas/Prompt"
+                                                }
+                                            }
                                         },
-                                        "prompt": {
-                                            "$ref": "#/components/schemas/Prompt"
+                                        {
+                                            "title": "Batch update response",
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "updatedCount": {
+                                                    "type": "integer",
+                                                    "description": "Number of prompts successfully updated"
+                                                },
+                                                "requestedCount": {
+                                                    "type": "integer",
+                                                    "description": "Number of prompts requested in the batch"
+                                                },
+                                                "results": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "promptId": {
+                                                                "type": "string"
+                                                            },
+                                                            "success": {
+                                                                "type": "boolean"
+                                                            },
+                                                            "error": {
+                                                                "type": "string",
+                                                                "description": "Present only when `success` is false"
+                                                            },
+                                                            "prompt": {
+                                                                "description": "Updated prompt object; present only when `success` is true",
+                                                                "$ref": "#/components/schemas/Prompt"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
-                                    }
+                                    ]
                                 }
                             }
                         }
@@ -1566,7 +1678,7 @@
                         }
                     },
                     "404": {
-                        "description": "Prompt not found",
+                        "description": "Prompt not found (single mode only). In batch mode, per-prompt not-found errors are returned inside `results[]` with a 200 response.",
                         "content": {
                             "application/json": {
                                 "schema": {
