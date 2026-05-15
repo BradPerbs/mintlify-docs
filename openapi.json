@@ -249,6 +249,82 @@
                         "description": "Current offset"
                     }
                 }
+            },
+            "DomainGroupEntity": {
+                "type": "object",
+                "description": "A single entity inside a domain group, enriched with display data.",
+                "properties": {
+                    "entityId": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Tracking ID for the entity in this workspace (null when the entity is not tracked here, e.g. a competitor)."
+                    },
+                    "entityUuid": {
+                        "type": "string",
+                        "description": "Stable, system-wide entity UUID."
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Entity display name."
+                    },
+                    "target": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Entity domain or term."
+                    },
+                    "faviconUrl": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Favicon URL for the entity, if known."
+                    },
+                    "isPrimary": {
+                        "type": "boolean",
+                        "description": "Whether this entity is the group's primary entity (its name/favicon represent the group)."
+                    },
+                    "inWorkspace": {
+                        "type": "boolean",
+                        "description": "Whether this entity is tracked in the current workspace."
+                    }
+                }
+            },
+            "DomainGroup": {
+                "type": "object",
+                "description": "A group of entities that represent the same brand. Analytics for grouped entities are merged across all pages and responses.",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Domain group ID."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "Display name for the group."
+                    },
+                    "primaryEntityUuid": {
+                        "type": "string",
+                        "description": "UUID of the entity whose name and favicon represent the group."
+                    },
+                    "entityTrackingId": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Optional entity-tracking scope. When set, the group only applies to analytics generated under this specific tracking."
+                    },
+                    "entities": {
+                        "type": "array",
+                        "description": "Entities included in the group. The entity with `isPrimary=true` represents the group.",
+                        "items": {
+                            "$ref": "#/components/schemas/DomainGroupEntity"
+                        }
+                    },
+                    "createdAt": {
+                        "type": "number",
+                        "description": "Creation timestamp (ms)."
+                    },
+                    "updatedAt": {
+                        "type": "number",
+                        "description": "Last update timestamp (ms)."
+                    }
+                }
             }
         }
     },
@@ -3943,6 +4019,477 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/domain-groups": {
+            "get": {
+                "operationId": "listDomainGroups",
+                "summary": "List Domain Groups",
+                "description": "List all domain groups in the workspace. A domain group merges analytics for multiple entities that represent the same brand into a single entry.\n\nProvide the optional `groupId` query parameter to fetch a single group by its ID, or `entityId` to filter to groups scoped to a specific entity tracking.",
+                "tags": [
+                    "Domain Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "groupId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "When provided, returns a single domain group by ID."
+                    },
+                    {
+                        "name": "entityId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "When provided, only returns groups scoped to this entity tracking (or legacy groups that have no tracking scope)."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Domain groups retrieved successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "type": "object",
+                                            "description": "Returned when neither groupId nor an empty result is requested.",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/DomainGroup"
+                                                    }
+                                                },
+                                                "count": {
+                                                    "type": "number"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "description": "Returned when `groupId` is supplied.",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean"
+                                                },
+                                                "data": {
+                                                    "$ref": "#/components/schemas/DomainGroup"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Domain group not found (only when `groupId` is supplied).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "operationId": "createDomainGroup",
+                "summary": "Create Domain Group",
+                "description": "Create a domain group that merges analytics for multiple entities representing the same brand.\n\nEntity references in `primaryEntity` and `entities` may be either:\n- an `entityId` returned by `GET /v1/entities` (a tracking ID for an entity in this workspace), or\n- an entity UUID returned as `entityUuid` by `GET /v1/competitors` (any entity in the system).\n\nAt least 2 entities are required, and `primaryEntity` must be included in the `entities` array. Each entity may belong to at most one group at a time. Additional non-primary entities count toward your workspace entity limit.",
+                "tags": [
+                    "Domain Groups"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "primaryEntity",
+                                    "entities"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Display name for the group. Defaults to the primary entity's name when omitted."
+                                    },
+                                    "primaryEntity": {
+                                        "type": "string",
+                                        "description": "The primary entity reference (entityId or entity UUID). Its name/favicon represent the group in the UI."
+                                    },
+                                    "entities": {
+                                        "type": "array",
+                                        "minItems": 2,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Array of 2+ entity references (entityIds or entity UUIDs). Must include the primary entity."
+                                    },
+                                    "entityId": {
+                                        "type": "string",
+                                        "description": "Optional. When provided, scopes the group to this entity tracking. Only analytics generated under this tracking will be merged."
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "merge_brand_domains": {
+                                    "summary": "Merge two workspace entities",
+                                    "value": {
+                                        "name": "Acme",
+                                        "primaryEntity": "j5712abc34def56ghij7890klmn",
+                                        "entities": [
+                                            "j5712abc34def56ghij7890klmn",
+                                            "j97def56ghij7890klmn5712abc"
+                                        ]
+                                    }
+                                },
+                                "merge_with_competitor_uuid": {
+                                    "summary": "Merge with a competitor entity UUID",
+                                    "description": "Mix workspace tracking IDs and entity UUIDs from /v1/competitors.",
+                                    "value": {
+                                        "primaryEntity": "j5712abc34def56ghij7890klmn",
+                                        "entities": [
+                                            "j5712abc34def56ghij7890klmn",
+                                            "550e8400-e29b-41d4-a716-446655440000"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Domain group created successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DomainGroup"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — validation failed, fewer than 2 entities, primary not included, entity overlap with another group, or workspace entity limit exceeded.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Referenced `entityId` not found in this workspace.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded — either the global write limit or the per-workspace domain-group change limit (5 changes per week).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "updateDomainGroup",
+                "summary": "Update Domain Group",
+                "description": "Update an existing domain group. Only the fields provided in the request body are changed.\n\nWhen `entities` is supplied, the same validation rules apply as when creating: at least 2 entities, the primary entity must be a member, entities must not overlap with other groups in the workspace, and the workspace entity limit must not be exceeded.",
+                "tags": [
+                    "Domain Groups"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "groupId"
+                                ],
+                                "properties": {
+                                    "groupId": {
+                                        "type": "string",
+                                        "description": "The ID of the domain group to update."
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "New display name for the group."
+                                    },
+                                    "primaryEntity": {
+                                        "type": "string",
+                                        "description": "New primary entity reference (entityId or entity UUID). Must be present in `entities`."
+                                    },
+                                    "entities": {
+                                        "type": "array",
+                                        "minItems": 2,
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "description": "Replacement set of 2+ entity references."
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "rename_group": {
+                                    "summary": "Rename a group",
+                                    "value": {
+                                        "groupId": "jh71abc...",
+                                        "name": "Acme Worldwide"
+                                    }
+                                },
+                                "add_an_entity": {
+                                    "summary": "Add an entity to the group",
+                                    "value": {
+                                        "groupId": "jh71abc...",
+                                        "entities": [
+                                            "j5712abc34def56ghij7890klmn",
+                                            "j97def56ghij7890klmn5712abc",
+                                            "550e8400-e29b-41d4-a716-446655440000"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Domain group updated successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/DomainGroup"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — validation failed (see message).",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Domain group not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "deleteDomainGroup",
+                "summary": "Delete Domain Group",
+                "description": "Delete a domain group. Analytics for the previously merged entities will be reported separately again.",
+                "tags": [
+                    "Domain Groups"
+                ],
+                "parameters": [
+                    {
+                        "name": "groupId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The ID of the domain group to delete."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Domain group deleted successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request — missing groupId.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Domain group not found.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Rate limit exceeded.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        },
+                                        "retryAfter": {
+                                            "type": "number"
+                                        }
+                                    }
                                 }
                             }
                         }
