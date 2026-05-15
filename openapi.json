@@ -2489,7 +2489,7 @@
             "get": {
                 "operationId": "getCompetitors",
                 "summary": "Get Competitors",
-                "description": "Get competitors visibility leaderboard.",
+                "description": "Get competitors visibility leaderboard.\n\n**Domain groups:** if the queried entity or any of its competitors belongs to a domain group in this workspace, entities sharing the same group are collapsed into a single row in the leaderboard, with mentions summed and avg position/sentiment computed as a mention-weighted average. The merged row reports the group's primary entity identity and includes `groupName` and `groupEntityUuids` so clients can render a badge.",
                 "tags": [
                     "Analytics"
                 ],
@@ -2564,17 +2564,48 @@
                                                     "rank": {
                                                         "type": "number"
                                                     },
+                                                    "entityUuid": {
+                                                        "type": "string",
+                                                        "description": "Entity UUID. For merged group rows, the primary entity's UUID."
+                                                    },
                                                     "domain": {
                                                         "type": "string"
                                                     },
                                                     "name": {
                                                         "type": "string"
                                                     },
-                                                    "visibilityScore": {
-                                                        "type": "number"
+                                                    "visibility": {
+                                                        "type": "number",
+                                                        "description": "Percentage of responses mentioning this entity (or any member of its domain group)."
                                                     },
-                                                    "mentionCount": {
-                                                        "type": "number"
+                                                    "mentions": {
+                                                        "type": "number",
+                                                        "description": "Total number of mentions (summed across the domain group when applicable)."
+                                                    },
+                                                    "avgPosition": {
+                                                        "type": "number",
+                                                        "nullable": true,
+                                                        "description": "Mention-weighted average position across the domain group."
+                                                    },
+                                                    "avgSentiment": {
+                                                        "type": "number",
+                                                        "nullable": true,
+                                                        "description": "Mention-weighted average sentiment across the domain group."
+                                                    },
+                                                    "isCurrentEntity": {
+                                                        "type": "boolean",
+                                                        "description": "True if this row represents the queried entity or any of its domain-group siblings."
+                                                    },
+                                                    "groupName": {
+                                                        "type": "string",
+                                                        "description": "Present only when the row was assembled from a domain group; the group's display name."
+                                                    },
+                                                    "groupEntityUuids": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "description": "Present only when the row was assembled from a domain group; all entity UUIDs that merged into this row."
                                                     }
                                                 }
                                             }
