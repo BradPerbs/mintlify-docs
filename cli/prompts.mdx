@@ -1,0 +1,83 @@
+---
+title: "Prompts"
+description: "Add, update, and delete tracking prompts"
+icon: "message"
+---
+
+Prompts are the questions LLMs are tested against to surface mentions of your entity. Each entity can have many prompts, each with its own language and geolocation.
+
+## `geogen prompts list`
+
+List prompts for an entity with visibility, sentiment, and average position stats. Maps to [`GET /v1/entities/prompts`](/api-reference/prompts-get).
+
+```bash
+geogen prompts list --entity ent_123 --period 30d
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` (default: `30d`) |
+| `--start-date <iso>` | Custom range start (use with `--end-date`) |
+| `--end-date <iso>` | Custom range end |
+| `--tags <ids>` | Comma-separated tag IDs |
+
+## `geogen prompts add`
+
+Add one or more prompts to an entity. Maps to [`POST /v1/entities/addprompt`](/api-reference/prompts-add).
+
+### Single prompt
+
+```bash
+geogen prompts add \
+  --entity ent_123 \
+  --prompt "best CRM for small business"
+```
+
+### Multiple prompts in one call
+
+```bash
+geogen prompts add \
+  --entity ent_123 \
+  --prompt "best CRM for small business" \
+  --prompt "alternatives to Salesforce" \
+  --prompt "CRM with HubSpot-style automation"
+```
+
+The CLI automatically uses bulk mode when you pass more than one `--prompt`.
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--prompt <text...>` | Prompt text. Repeat for multiple. |
+| `--language <code>` | Default language code for all added prompts |
+| `--geolocation <code>` | Default geolocation code for all added prompts |
+
+## `geogen prompts update`
+
+Edit an existing prompt. Maps to [`PATCH /v1/entities/updateprompt`](/api-reference/prompts-update).
+
+```bash
+geogen prompts update \
+  --prompt-id pr_abc \
+  --text "new prompt wording" \
+  --active true
+```
+
+| Flag | Description |
+|---|---|
+| `--prompt-id <id>` | Prompt ID (required) |
+| `--text <text>` | New prompt text |
+| `--language <code>` | Language code |
+| `--geolocation <code>` | Geolocation code |
+| `--active <bool>` | `true` / `false` to pause or resume the prompt |
+
+## `geogen prompts delete`
+
+Soft-delete a prompt by ID. Maps to [`DELETE /v1/entities/deleteprompt`](/api-reference/prompts-delete).
+
+```bash
+geogen prompts delete --prompt-id pr_abc
+```

@@ -1,0 +1,60 @@
+---
+title: "Citations"
+description: "See which domains and URLs LLMs cite when answering about your entity"
+icon: "quote-left"
+---
+
+Citations are the external links LLMs reference when answering prompts. The CLI exposes both the aggregated top-domains view and per-domain URL drill-downs.
+
+## `geogen citations list`
+
+Top cited domains for an entity. Maps to [`GET /v1/entities/citations`](/api-reference/citations).
+
+```bash
+geogen citations list --entity ent_123 --period 30d --limit 20
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--tags <ids>` | Comma-separated tag IDs |
+| `--prompt-ids <ids>` | Comma-separated prompt IDs |
+| `--limit <n>` | Max results |
+| `--offset <n>` | Pagination offset |
+
+The result includes a `uuid` for each cited domain — use that with `citations details` to drill in.
+
+## `geogen citations details`
+
+Show exact URLs LLMs cited on a specific domain. Maps to [`GET /v1/entities/citations/details`](/api-reference/citations-details).
+
+```bash
+geogen citations details \
+  --entity ent_123 \
+  --cited <citedEntityUuid> \
+  --period 30d \
+  --limit 50
+```
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--cited <uuid>` | Cited domain UUID from `citations list` (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--limit <n>` | Max results |
+| `--offset <n>` | Pagination offset |
+
+### Pipeline example
+
+```bash
+# Top cited domain → drill into its URLs
+TOP_UUID=$(geogen --json citations list --entity ent_123 --limit 1 | jq -r '.data[0].citedEntityUuid')
+geogen citations details --entity ent_123 --cited "$TOP_UUID"
+```

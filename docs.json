@@ -162,6 +162,63 @@
                         ]
                     }
                 ]
+            },
+            {
+                "tab": "CLI",
+                "icon": "terminal",
+                "href": "cli/introduction",
+                "groups": [
+                    {
+                        "group": "Overview",
+                        "pages": [
+                            "cli/introduction",
+                            "cli/authentication",
+                            "cli/global-options"
+                        ]
+                    },
+                    {
+                        "group": "Workspace",
+                        "pages": [
+                            "cli/workspace"
+                        ]
+                    },
+                    {
+                        "group": "Entities",
+                        "pages": [
+                            "cli/entities",
+                            "cli/prompts",
+                            "cli/name-request"
+                        ]
+                    },
+                    {
+                        "group": "Domain Groups",
+                        "pages": [
+                            "cli/domain-groups"
+                        ]
+                    },
+                    {
+                        "group": "Analytics",
+                        "pages": [
+                            "cli/responses",
+                            "cli/citations",
+                            "cli/competitors",
+                            "cli/trends",
+                            "cli/query-fanouts"
+                        ]
+                    },
+                    {
+                        "group": "Actions",
+                        "pages": [
+                            "cli/actions"
+                        ]
+                    },
+                    {
+                        "group": "Models",
+                        "pages": [
+                            "cli/models"
+                        ]
+                    }
+                ]
             }
         ]
     },

@@ -1,0 +1,22 @@
+---
+title: "Models"
+description: "List available LLM models you can track against"
+icon: "microchip"
+---
+
+## `geogen models`
+
+List every LLM model GeoGen can run mention checks against (ChatGPT, Claude, Perplexity, Gemini, etc.). Maps to [`GET /v1/models`](/api-reference/models).
+
+```bash
+geogen models
+```
+
+Columns: `id`, `name`, `description`.
+
+Use the `id` (a UUID) with the `--models` flag on commands like `geogen entities create`, `geogen entities update`, `geogen responses list`, and the trend commands.
+
+```bash
+# Pick the two model UUIDs you want and pass them comma-separated
+geogen entities update --entity ent_123 --models <uuid-a>,<uuid-b>
+```

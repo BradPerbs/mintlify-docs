@@ -1,0 +1,47 @@
+---
+title: "Actions"
+description: "AI-generated recommendations and kanban tasks"
+icon: "list-check"
+---
+
+GeoGen generates **actionables** — AI-suggested SEO improvements — and lets you promote them to **tasks** on a kanban board. The CLI exposes both surfaces.
+
+## `geogen actions list`
+
+List actionables and tasks for an entity. Maps to [`GET /v1/entities/actions`](/api-reference/actions-get).
+
+```bash
+geogen actions list --entity ent_123
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--status <state>` | Filter actionables: `active`, `dismissed`, or `in_task` |
+
+The output renders two tables — one for actionables, one for tasks.
+
+## `geogen actions dismiss`
+
+Dismiss an actionable so it no longer appears in the active feed. Dismissed actionables free up slots for new ones on the next mention check. Maps to [`POST /v1/entities/actions/dismiss`](/api-reference/actions-dismiss).
+
+```bash
+geogen actions dismiss --actionable-id act_abc
+```
+
+## `geogen actions update-status`
+
+Move a task through the kanban workflow. Maps to [`POST /v1/entities/actions/update-status`](/api-reference/actions-update-status).
+
+```bash
+geogen actions update-status --task-id task_xyz --status in_progress
+```
+
+Valid `--status` values:
+
+- `not_started`
+- `in_progress`
+- `in_review`
+- `done`

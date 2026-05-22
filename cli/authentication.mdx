@@ -1,0 +1,106 @@
+---
+title: "Authentication"
+description: "How the CLI finds and stores your API key"
+icon: "key"
+---
+
+The CLI uses the same workspace API keys as the `/v1` REST API. Get one from **Settings → Workspaces → Your Workspace → API Keys**.
+
+## Three ways to authenticate
+
+The CLI resolves credentials in this order — the first match wins:
+
+<Steps>
+  <Step title="CLI flag (highest priority)">
+    ```bash
+    geogen workspace --api-key wsk_your_api_key_here
+    ```
+    Use this for one-off calls or when scripting against multiple workspaces.
+  </Step>
+  <Step title="Environment variable">
+    ```bash
+    export GEOGEN_API_KEY=wsk_your_api_key_here
+    export GEOGEN_BASE_URL=https://api.geogen.io   # optional
+    geogen workspace
+    ```
+    Best for CI/CD where you inject secrets at runtime.
+  </Step>
+  <Step title="Config file (default)">
+    ```bash
+    geogen login --api-key wsk_your_api_key_here
+    ```
+    Stores the key at `~/.geogen/config.json`. On POSIX, the file is locked down with `chmod 600`. Recommended for interactive desktop use.
+  </Step>
+</Steps>
+
+## Login
+
+```bash
+geogen login --api-key wsk_your_api_key_here
+```
+
+Optional flags:
+
+| Flag | Description |
+|---|---|
+| `--base-url <url>` | Override the API base URL (default: `https://api.geogen.io`) |
+
+## Logout
+
+Clears the stored credentials:
+
+```bash
+geogen logout
+```
+
+## Inspect resolved config
+
+`geogen config` prints the effective configuration and where each value came from:
+
+```bash
+$ geogen config
+Config file: /Users/you/.geogen/config.json
+┌──────────┬─────────────┬────────┐
+│ setting  │ value       │ source │
+├──────────┼─────────────┼────────┤
+│ api key  │ wsk_…ab12   │ file   │
+│ base url │ https://api.geogen.io │ default │
+└──────────┴─────────────┴────────┘
+```
+
+The API key is masked — only the first and last four characters are shown.
+
+## Config file format
+
+`~/.geogen/config.json` is plain JSON:
+
+```json
+{
+  "apiKey": "wsk_your_api_key_here",
+  "baseUrl": "https://api.geogen.io"
+}
+```
+
+You can edit it manually if you prefer. Missing fields fall through to env vars, then defaults.
+
+<Warning>
+Never commit `~/.geogen/config.json` or your API key to source control. For CI pipelines, use `GEOGEN_API_KEY` as a secret instead.
+</Warning>
+
+## Multiple workspaces
+
+The CLI doesn't have built-in profile support yet, but you can run against any workspace by passing `--api-key` per command, or by switching the env var:
+
+```bash
+GEOGEN_API_KEY=wsk_prod_key geogen entities list
+GEOGEN_API_KEY=wsk_staging_key geogen entities list
+```
+
+## Errors
+
+| Symptom | Likely cause |
+|---|---|
+| `No API key found.` | None of the three sources resolved a key. Run `geogen login`. |
+| `Invalid API key format` | The key was rejected by the server — check for typos or trailing whitespace. |
+| `API key is deactivated` | The key was revoked in the dashboard. Create a new one. |
+| `HTTP 401` | Same as the above two — verify the key against the dashboard. |

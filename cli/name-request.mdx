@@ -1,0 +1,36 @@
+---
+title: "Name Requests"
+description: "Submit and check name-change requests for an entity"
+icon: "id-card"
+---
+
+Entity names can't be edited directly — they go through a review workflow. The `name-request` group lets you submit a proposed name and check its status.
+
+## `geogen name-request submit`
+
+Submit a name-change request. Maps to [`POST /v1/entities/name-request`](/api-reference/name-request-submit).
+
+```bash
+geogen name-request submit \
+  --entity ent_123 \
+  --name "Acme Corp." \
+  --reason "Trademark update from 'Acme Inc.'"
+```
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--name <name>` | Suggested new name (required) |
+| `--reason <text>` | Optional context for the reviewer |
+
+An admin reviews the request before the entity's display name actually changes.
+
+## `geogen name-request status`
+
+Check the status of an outstanding request. Maps to [`GET /v1/entities/name-request`](/api-reference/name-request-status).
+
+```bash
+geogen name-request status --entity ent_123
+```
+
+The response includes the suggested name, reason, current status, and timestamps. If there's no pending or recent request, the CLI reports `no pending request`.

@@ -1,0 +1,108 @@
+---
+title: "Entities"
+description: "Create, list, update, and remove tracked entities"
+icon: "globe"
+---
+
+Entities are the websites or brands you track. Every analytics command needs an entity ID — get one from `geogen entities list`.
+
+## `geogen entities list`
+
+List all tracked entities in the workspace. Maps to [`GET /v1/entities`](/api-reference/entities-get).
+
+```bash
+geogen entities list
+```
+
+The `id` column is the `entityTrackingId` — use it with every other command that takes `--entity`.
+
+## `geogen entities create`
+
+Create a new tracked entity. **This consumes credits.** Maps to [`POST /v1/entities`](/api-reference/entities-create).
+
+```bash
+geogen entities create \
+  --name "Acme" \
+  --domain acme.com \
+  --description "B2B CRM for small business" \
+  --language en \
+  --geolocation us
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--name <name>` | Display name (required) |
+| `--domain <domain>` | Domain to track, e.g. `example.com` (required) |
+| `--description <text>` | Free-text description for context |
+| `--language <code>` | Language code, e.g. `en`, `fr` |
+| `--geolocation <code>` | Geolocation code, e.g. `global`, `us` |
+| `--models <uuids>` | Comma-separated model UUIDs (see `geogen models`) |
+| `--tracking-type <type>` | `website` (default) or `individual` |
+| `--no-generate-prompts` | Skip automatic AI prompt generation |
+| `--no-start-tracking` | Do not start tracking immediately |
+| `--prompt <text...>` | Provide your own prompts. Repeat the flag for multiple. |
+
+### With your own prompts
+
+```bash
+geogen entities create \
+  --name "Acme" --domain acme.com \
+  --prompt "best CRM for small business" \
+  --prompt "alternatives to Salesforce" \
+  --prompt "CRM with HubSpot-style automation"
+```
+
+When `--prompt` is supplied, automatic generation is skipped automatically.
+
+## `geogen entities update`
+
+Update fields on an existing entity. Maps to [`PATCH /v1/entities`](/api-reference/entities-update).
+
+```bash
+geogen entities update \
+  --entity ent_123 \
+  --description "Updated description" \
+  --models uuid-a,uuid-b
+```
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID to update (required) |
+| `--name <name>` | New display name |
+| `--target <domain>` | New domain/target |
+| `--description <text>` | New description |
+| `--language <code>` | Language code |
+| `--geolocation <code>` | Geolocation code |
+| `--models <uuids>` | Comma-separated model UUIDs (replaces the existing set) |
+
+## `geogen entities delete`
+
+Remove an entity (or a single tracking instance) from the workspace. Maps to [`DELETE /v1/entities`](/api-reference/entities-remove).
+
+```bash
+geogen entities delete --entity ent_123
+```
+
+<Warning>
+Deletion soft-deletes the workspace's prompts and removes the tracking. The shared entity record (used by other workspaces tracking the same domain) is preserved.
+</Warning>
+
+## `geogen entities check-domain`
+
+Check whether a domain can be added to your workspace. Maps to [`GET /v1/entities/check-domain`](/api-reference/check-domain).
+
+```bash
+geogen entities check-domain --domain acme.com
+```
+
+The response tells you whether the domain is already tracked in your workspace, globally elsewhere, or fully available.
+
+## `geogen entities tracking-status`
+
+Show when the last mention check completed, when the next is scheduled, and whether one is running right now. Maps to [`GET /v1/entities/tracking-status`](/api-reference/tracking-status).
+
+```bash
+geogen entities tracking-status --entity ent_123
+```

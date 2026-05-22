@@ -1,0 +1,82 @@
+---
+title: "Domain Groups"
+description: "Group sibling/aliased entities under a single primary"
+icon: "object-group"
+---
+
+A **domain group** lets you tie several entity records together — for example, when one brand is tracked under multiple domains (`acme.com`, `acme.io`, `getacme.com`) and you want their analytics merged behind a single primary. Each group has one **primary entity** and two or more **member entities**.
+
+## `geogen domain-groups list`
+
+List domain groups in the workspace. Maps to [`GET /v1/domain-groups`](/api-reference/domain-groups-list).
+
+```bash
+geogen domain-groups list
+geogen domain-groups list --entity ent_123    # only groups scoped to this tracking
+```
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Filter to groups scoped to this entity tracking |
+
+## `geogen domain-groups get`
+
+Fetch a single domain group with its full member detail. The detailed payload is printed as JSON.
+
+```bash
+geogen domain-groups get --group-id grp_abc
+```
+
+## `geogen domain-groups create`
+
+Create a new group from 2+ entities. Maps to [`POST /v1/domain-groups`](/api-reference/domain-groups-create).
+
+```bash
+geogen domain-groups create \
+  --primary ent_primary \
+  --entities ent_primary,ent_alias_io,ent_alias_get \
+  --name "Acme (all domains)"
+```
+
+| Flag | Description |
+|---|---|
+| `--primary <ref>` | Primary entity — `entityTrackingId` or entity UUID (required) |
+| `--entities <refs>` | Comma-separated entity refs, must include `--primary` (required, 2+) |
+| `--name <name>` | Group name. Defaults to the primary entity's name. |
+| `--entity <id>` | Optional entity tracking to scope the group to |
+
+<Note>
+You can pass either an `entityTrackingId` (the `id` from `geogen entities list`) or a raw entity UUID. The API resolves both forms.
+</Note>
+
+## `geogen domain-groups update`
+
+Update a group's name, primary, or member list. Maps to [`PATCH /v1/domain-groups`](/api-reference/domain-groups-update).
+
+```bash
+geogen domain-groups update \
+  --group-id grp_abc \
+  --name "Acme (renamed)" \
+  --entities ent_primary,ent_alias_io,ent_alias_get,ent_alias_co
+```
+
+| Flag | Description |
+|---|---|
+| `--group-id <id>` | Domain group ID (required) |
+| `--name <name>` | New name |
+| `--primary <ref>` | New primary entity ref |
+| `--entities <refs>` | New comma-separated member list (replaces the existing set; 2+) |
+
+If you pass `--entities`, the new list must contain the (possibly new) primary entity.
+
+## `geogen domain-groups delete`
+
+Delete a domain group. Maps to [`DELETE /v1/domain-groups`](/api-reference/domain-groups-delete).
+
+```bash
+geogen domain-groups delete --group-id grp_abc
+```
+
+<Warning>
+Deleting a group does not delete any of its member entities — only the grouping. Their individual analytics remain intact.
+</Warning>

@@ -1,0 +1,113 @@
+---
+title: "Introduction"
+description: "Use the GeoGen CLI to query your LLM visibility data from any terminal"
+icon: "terminal"
+---
+
+# GeoGen CLI
+
+The GeoGen CLI is a terminal client for the GeoGen `/v1` API. It lets you query LLM visibility data, manage entities and prompts, and inspect citations and competitors — all from a shell. The CLI is a thin wrapper over the same public API used by the dashboard and MCP server, so anything you can do with curl, you can do with `geogen`.
+
+<Info>
+The CLI prints human-readable tables by default and supports `--json` on every command for piping into `jq`, scripts, or CI jobs.
+</Info>
+
+## Prerequisites
+
+- **Node.js v18+** — check with `node -v`. [Download Node.js](https://nodejs.org) if it's missing.
+- A **GeoGen API key** — see **Settings → Workspaces → Your Workspace → API Keys**.
+
+## Install
+
+<Tabs>
+  <Tab title="Global install (recommended)">
+    Installs the `geogen` command on your PATH so you can run it like any other CLI:
+
+    ```bash
+    npm install -g @geogenio/cli
+    geogen --help
+    geogen workspace
+    ```
+  </Tab>
+  <Tab title="One-off (npx)">
+    Run without installing globally. Use the explicit `-p ... geogen` form — the short `npx @geogenio/cli` form only resolves on newer npm/npx versions:
+
+    ```bash
+    npx -p @geogenio/cli geogen --help
+    npx -p @geogenio/cli geogen workspace
+    ```
+  </Tab>
+</Tabs>
+
+## Quick start
+
+```bash
+# 1. Authenticate
+geogen login --api-key wsk_your_api_key_here
+
+# 2. Verify the connection
+geogen workspace
+
+# 3. List your tracked entities
+geogen entities list
+
+# 4. Inspect visibility for an entity
+geogen trends visibility --entity ent_123 --period 7d
+```
+
+That's it — every other command follows the same shape: `geogen <group> <verb> [--flags]`.
+
+## Command map
+
+<CardGroup cols={2}>
+  <Card title="Workspace" icon="building" href="/cli/workspace">
+    Usage, limits, credits, members, and tags
+  </Card>
+  <Card title="Entities" icon="globe" href="/cli/entities">
+    Create, list, update, delete tracked entities
+  </Card>
+  <Card title="Prompts" icon="message" href="/cli/prompts">
+    Add, update, delete tracking prompts
+  </Card>
+  <Card title="Name Requests" icon="id-card" href="/cli/name-request">
+    Submit and check entity name-change requests
+  </Card>
+  <Card title="Domain Groups" icon="object-group" href="/cli/domain-groups">
+    Group sibling entities under a single primary
+  </Card>
+  <Card title="Models" icon="microchip" href="/cli/models">
+    Browse available LLM models and their UUIDs
+  </Card>
+  <Card title="Responses" icon="comment-dots" href="/cli/responses">
+    LLM responses with mention status
+  </Card>
+  <Card title="Citations" icon="quote-left" href="/cli/citations">
+    Top cited domains and per-domain URLs
+  </Card>
+  <Card title="Competitors" icon="ranking-star" href="/cli/competitors">
+    Competitor visibility leaderboard
+  </Card>
+  <Card title="Trends" icon="chart-line" href="/cli/trends">
+    Daily visibility, sentiment, and citation trends
+  </Card>
+  <Card title="Query Fanouts" icon="magnifying-glass" href="/cli/query-fanouts">
+    Web search queries LLMs run while answering
+  </Card>
+  <Card title="Actions" icon="list-check" href="/cli/actions">
+    Actionable recommendations and kanban tasks
+  </Card>
+</CardGroup>
+
+## Why a CLI?
+
+- **Scriptable** — drop `geogen` calls into any bash/PowerShell script or CI pipeline.
+- **Pipe-friendly** — pass `--json` and you get clean JSON for `jq`, `yq`, or any downstream tool.
+- **No SDK lock-in** — the CLI talks to the same `/v1` REST API documented under [Public APIs](/api-reference/introduction). You can swap to raw `curl` at any time.
+- **Same auth model as MCP** — your existing workspace API key works without any new setup.
+
+## Need help?
+
+- Run `geogen --help` or `geogen <command> --help` for inline reference.
+- See [Authentication](/cli/authentication) for credential storage and precedence.
+- See [Global Options](/cli/global-options) for flags that work on every command.
+- Email [contact@geogen.io](mailto:contact@geogen.io) if you hit a wall.

@@ -1,0 +1,48 @@
+---
+title: "Global Options"
+description: "Flags that work on every CLI command"
+icon: "sliders"
+---
+
+These flags apply to every `geogen` subcommand. They must appear **before** the subcommand (e.g. `geogen --json entities list`, not `geogen entities list --json`).
+
+| Flag | Description |
+|---|---|
+| `--json` | Print raw JSON output instead of human-readable tables. Errors are printed as `{ "error": "…" }`. |
+| `--api-key <key>` | Override the API key for this invocation only. Takes precedence over env vars and the config file. |
+| `--base-url <url>` | Override the API base URL for this invocation only. Default: `https://api.geogen.io`. |
+| `-V`, `--version` | Print the CLI version. |
+| `-h`, `--help` | Print help text. Works on every subcommand too: `geogen entities create --help`. |
+
+## `--json`
+
+The default output is a formatted table optimized for humans. Pass `--json` for clean structured output:
+
+```bash
+geogen --json entities list | jq '.[].entity.name'
+```
+
+This is the recommended mode for scripts and CI jobs — table rendering may evolve between minor versions, but JSON output mirrors the underlying `/v1` API and is stable.
+
+## `--api-key` and `--base-url`
+
+These exist for two cases:
+
+1. **Multi-workspace scripts** — pass a different key per call without juggling env vars.
+2. **Staging or self-hosted backends** — point at a non-production base URL.
+
+```bash
+geogen --api-key wsk_prod entities list
+geogen --base-url https://staging.geogen.io workspace
+```
+
+See [Authentication](/cli/authentication) for the full resolution order.
+
+## Exit codes
+
+| Code | Meaning |
+|---|---|
+| `0` | Command succeeded. |
+| `1` | Command failed — error message printed to stderr, or to stdout as JSON when `--json` is set. |
+
+Standard output is reserved for command results; status, info, and error messages go to stderr. That means `geogen --json entities list > entities.json` produces a clean JSON file even if status messages would otherwise be printed.

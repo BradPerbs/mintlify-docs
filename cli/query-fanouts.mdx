@@ -1,0 +1,41 @@
+---
+title: "Query Fanouts"
+description: "Inspect web search queries LLMs run while answering"
+icon: "magnifying-glass"
+---
+
+## `geogen query-fanouts`
+
+When an LLM performs web search while answering a prompt, the search queries it issues are captured as **query fanouts**. They tell you what an LLM actually goes looking for when asked about your entity.
+
+Maps to [`GET /v1/query-fanouts`](/api-reference/query-fanouts).
+
+```bash
+geogen query-fanouts --entity ent_123 --period 30d --limit 50
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--tags <ids>` | Comma-separated tag IDs |
+| `--search <text>` | Full-text search filter on query text |
+| `--limit <n>` | Max results |
+| `--offset <n>` | Pagination offset |
+
+Columns: `query`, `count`, `models`.
+
+### Find queries mentioning a topic
+
+```bash
+geogen query-fanouts \
+  --entity ent_123 \
+  --search "pricing" \
+  --period 30d
+```
+
+For more context on what fanouts are and how to interpret them, see the [Query Fanouts concept guide](/concepts/query-fanouts).

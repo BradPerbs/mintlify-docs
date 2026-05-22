@@ -1,0 +1,57 @@
+---
+title: "Responses"
+description: "Inspect raw LLM responses and their mention status"
+icon: "comment-dots"
+---
+
+Responses are the raw LLM outputs collected during mention checks. Each response is tied to a prompt and a model, and may or may not mention your entity.
+
+## `geogen responses list`
+
+List responses with mention status. Maps to [`GET /v1/responses`](/api-reference/responses).
+
+```bash
+geogen responses list --entity ent_123 --period 7d
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--tags <ids>` | Comma-separated tag IDs |
+| `--prompt-ids <ids>` | Comma-separated prompt IDs |
+| `--mention-status <state>` | `all`, `mentioned`, or `not-mentioned` |
+| `--limit <n>` | Max results |
+| `--offset <n>` | Pagination offset |
+
+### Common filters
+
+```bash
+# Only responses that mentioned my entity in the last 14 days
+geogen responses list --entity ent_123 --period 14d --mention-status mentioned
+
+# Responses from two specific models
+geogen responses list --entity ent_123 --models <uuid-a>,<uuid-b>
+
+# Responses to a specific prompt
+geogen responses list --entity ent_123 --prompt-ids pr_abc
+```
+
+## `geogen responses details`
+
+Show the full payload for a single response, including mentions, citations, and query fanouts. Maps to [`GET /v1/responses/details`](/api-reference/responses-details).
+
+```bash
+geogen responses details --response-id resp_xyz --entity ent_123
+```
+
+The detail payload is rich and varies by model, so this command always prints JSON. Pair it with `jq` for ergonomic inspection:
+
+```bash
+geogen responses details --response-id resp_xyz --entity ent_123 \
+  | jq '.citations[].url'
+```

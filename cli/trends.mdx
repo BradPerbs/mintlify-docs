@@ -1,0 +1,60 @@
+---
+title: "Trends"
+description: "Daily visibility, sentiment, and citation trends over time"
+icon: "chart-line"
+---
+
+The `trends` group exposes daily time-series for visibility, sentiment, and citations. All three subcommands accept the same time-range and filter flags.
+
+## Shared options
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range (use both) |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--tags <ids>` | Comma-separated tag IDs |
+
+## `geogen trends visibility`
+
+Daily visibility percentage, mention count, and total responses. Maps to [`GET /v1/trends/visibility`](/api-reference/trends-visibility).
+
+```bash
+geogen trends visibility --entity ent_123 --period 30d
+```
+
+Extra flag: `--prompt-ids <ids>` to scope the trend to specific prompts.
+
+## `geogen trends sentiment`
+
+Daily average sentiment score and mention count. Maps to [`GET /v1/trends/sentiment`](/api-reference/trends-sentiment).
+
+```bash
+geogen trends sentiment --entity ent_123 --period 14d
+```
+
+## `geogen trends citations`
+
+Daily citation count for top cited domains. Maps to [`GET /v1/trends/citations`](/api-reference/trends-citations).
+
+```bash
+geogen trends citations --entity ent_123 --period 30d --top-n 5
+```
+
+Extra flags:
+
+| Flag | Description |
+|---|---|
+| `--prompt-ids <ids>` | Comma-separated prompt IDs |
+| `--top-n <n>` | Number of top cited domains to include in the trend |
+
+## Piping into a chart
+
+`--json` output is ready for any plotting tool:
+
+```bash
+geogen --json trends visibility --entity ent_123 --period 30d \
+  | jq -r '.data[] | [.date, .visibility] | @csv' \
+  > visibility.csv
+```

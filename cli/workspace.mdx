@@ -1,0 +1,54 @@
+---
+title: "Workspace"
+description: "Inspect workspace usage, members, and tags"
+icon: "building"
+---
+
+The `workspace` group surfaces metadata about the workspace tied to your current API key.
+
+## `geogen workspace`
+
+Show workspace usage, plan, limits, and credit balance. Equivalent to the [`GET /v1/workspace`](/api-reference/workspace) endpoint.
+
+```bash
+geogen workspace
+```
+
+```bash
+geogen workspace --json
+```
+
+Example output:
+
+```text
+┌─────────────────────────┬─────────────────────────┐
+│ field                   │ value                   │
+├─────────────────────────┼─────────────────────────┤
+│ workspace               │ Acme                    │
+│ plan                    │ Growth                  │
+│ entities used / limit   │ 12 / 25                 │
+│ prompts used / limit    │ 248 / 500               │
+│ team seats used / limit │ 3 / 5                   │
+│ credits balance         │ 2840                    │
+└─────────────────────────┴─────────────────────────┘
+```
+
+## `geogen workspace members`
+
+List all active team members. Maps to [`GET /v1/workspace/members`](/api-reference/workspace-members).
+
+```bash
+geogen workspace members
+```
+
+Columns: `email`, `name`, `role`, `joined`.
+
+## `geogen workspace tags`
+
+List workspace tags used to organize prompts. Maps to [`GET /v1/workspace/tags`](/api-reference/workspace-tags).
+
+```bash
+geogen workspace tags
+```
+
+Use the returned tag IDs with `--tags` filters on commands like `geogen prompts list` or `geogen trends visibility`.

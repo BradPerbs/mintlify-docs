@@ -1,0 +1,36 @@
+---
+title: "Competitors"
+description: "See how your entity ranks against competitors in LLM mentions"
+icon: "ranking-star"
+---
+
+## `geogen competitors`
+
+Competitor visibility leaderboard. Maps to [`GET /v1/competitors`](/api-reference/competitors).
+
+```bash
+geogen competitors --entity ent_123 --period 30d
+```
+
+Options:
+
+| Flag | Description |
+|---|---|
+| `--entity <id>` | Entity ID (required) |
+| `--period <period>` | `7d`, `14d`, or `30d` |
+| `--start-date <iso>` / `--end-date <iso>` | Custom date range |
+| `--models <uuids>` | Comma-separated model UUIDs |
+| `--competitors-only` | Exclude your own entity from the leaderboard |
+| `--limit <n>` | Max results |
+| `--offset <n>` | Pagination offset |
+
+Columns: `rank`, `name`, `visibility%`, `mentions`.
+
+```bash
+# Top 10 competitors only, last 14 days, JSON output
+geogen --json competitors \
+  --entity ent_123 \
+  --period 14d \
+  --competitors-only \
+  --limit 10
+```
