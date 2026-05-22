@@ -5,7 +5,7 @@ description: "Use the GeoGen CLI to query your LLM visibility data from any term
 
 # GeoGen CLI
 
-The GeoGen CLI is a terminal client for the GeoGen `/v1` API. It lets you query LLM visibility data, manage entities and prompts, and inspect citations and competitors — all from a shell. The CLI is a thin wrapper over the same public API used by the dashboard and MCP server, so anything you can do with curl, you can do with `geogen`.
+The GeoGen CLI is a terminal client for the GeoGen `/v1` API. It lets you query LLM visibility data, manage entities and prompts, and inspect citations and competitors, all from a shell. The CLI is a thin wrapper over the same public API used by the dashboard and MCP server, so anything you can do with curl, you can do with `geogen`.
 
 <Info>
 The CLI prints human-readable tables by default and supports `--json` on every command for piping into `jq`, scripts, or CI jobs.
@@ -13,8 +13,8 @@ The CLI prints human-readable tables by default and supports `--json` on every c
 
 ## Prerequisites
 
-- **Node.js v18+** — check with `node -v`. [Download Node.js](https://nodejs.org) if it's missing.
-- A **GeoGen API key** — see **Settings → Workspaces → Your Workspace → API Keys**.
+- **Node.js v18+** (check with `node -v`). [Download Node.js](https://nodejs.org) if it's missing.
+- A **GeoGen API key**. See **Settings → Workspaces → Your Workspace → API Keys**.
 
 ## Install
 
@@ -29,7 +29,7 @@ The CLI prints human-readable tables by default and supports `--json` on every c
     ```
   </Tab>
   <Tab title="One-off (npx)">
-    Run without installing globally. Use the explicit `-p ... geogen` form — the short `npx @geogenio/cli` form only resolves on newer npm/npx versions:
+    Run without installing globally. Use the explicit `-p ... geogen` form. The short `npx @geogenio/cli` form only resolves on newer npm/npx versions:
 
     ```bash
     npx -p @geogenio/cli geogen --help
@@ -54,10 +54,10 @@ geogen entities list
 geogen trends visibility --entity ent_123 --period 7d
 ```
 
-That's it — every other command follows the same shape: `geogen <group> <verb> [--flags]`.
+That's it. Every other command follows the same shape: `geogen <group> <verb> [--flags]`.
 
 <Tip>
-For scripts and CI where opening a browser isn't an option, pass an API key directly: `geogen login --api-key wsk_...` — or set `GEOGEN_API_KEY` as an environment variable. See [Authentication](/cli/authentication) for all three modes.
+For scripts and CI where opening a browser isn't an option, pass an API key directly: `geogen login --api-key wsk_...`, or set `GEOGEN_API_KEY` as an environment variable. See [Authentication](/cli/authentication) for all three modes.
 </Tip>
 
 ## Command map
@@ -103,10 +103,10 @@ For scripts and CI where opening a browser isn't an option, pass an API key dire
 
 ## Why a CLI?
 
-- **Scriptable** — drop `geogen` calls into any bash/PowerShell script or CI pipeline.
-- **Pipe-friendly** — pass `--json` and you get clean JSON for `jq`, `yq`, or any downstream tool.
-- **No SDK lock-in** — the CLI talks to the same `/v1` REST API documented under [Public APIs](/api-reference/introduction). You can swap to raw `curl` at any time.
-- **Same auth model as MCP** — your existing workspace API key works without any new setup.
+- **Scriptable**: drop `geogen` calls into any bash/PowerShell script or CI pipeline.
+- **Pipe-friendly**: pass `--json` and you get clean JSON for `jq`, `yq`, or any downstream tool.
+- **No SDK lock-in**: the CLI talks to the same `/v1` REST API documented under [Public APIs](/api-reference/introduction). You can swap to raw `curl` at any time.
+- **Same auth model as MCP**: your existing workspace API key works without any new setup.
 
 ## Need help?
 

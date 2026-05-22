@@ -21,14 +21,14 @@ The default output is a formatted table optimized for humans. Pass `--json` for 
 geogen --json entities list | jq '.[].entity.name'
 ```
 
-This is the recommended mode for scripts and CI jobs — table rendering may evolve between minor versions, but JSON output mirrors the underlying `/v1` API and is stable.
+This is the recommended mode for scripts and CI jobs. Table rendering may evolve between minor versions, but JSON output mirrors the underlying `/v1` API and is stable.
 
 ## `--api-key` and `--base-url`
 
 These exist for two cases:
 
-1. **Multi-workspace scripts** — pass a different key per call without juggling env vars.
-2. **Staging or self-hosted backends** — point at a non-production base URL.
+1. **Multi-workspace scripts**: pass a different key per call without juggling env vars.
+2. **Staging or self-hosted backends**: point at a non-production base URL.
 
 ```bash
 geogen --api-key wsk_prod entities list
@@ -42,6 +42,6 @@ See [Authentication](/cli/authentication) for the full resolution order.
 | Code | Meaning |
 |---|---|
 | `0` | Command succeeded. |
-| `1` | Command failed — error message printed to stderr, or to stdout as JSON when `--json` is set. |
+| `1` | Command failed. Error message printed to stderr, or to stdout as JSON when `--json` is set. |
 
 Standard output is reserved for command results; status, info, and error messages go to stderr. That means `geogen --json entities list > entities.json` produces a clean JSON file even if status messages would otherwise be printed.
