@@ -42,8 +42,8 @@ The CLI prints human-readable tables by default and supports `--json` on every c
 ## Quick start
 
 ```bash
-# 1. Authenticate
-geogen login --api-key wsk_your_api_key_here
+# 1. Authenticate (opens your browser, pick a workspace, click Authorize)
+geogen login
 
 # 2. Verify the connection
 geogen workspace
@@ -56,6 +56,10 @@ geogen trends visibility --entity ent_123 --period 7d
 ```
 
 That's it — every other command follows the same shape: `geogen <group> <verb> [--flags]`.
+
+<Tip>
+For scripts and CI where opening a browser isn't an option, pass an API key directly: `geogen login --api-key wsk_...` — or set `GEOGEN_API_KEY` as an environment variable. See [Authentication](/cli/authentication) for all three modes.
+</Tip>
 
 ## Command map
 

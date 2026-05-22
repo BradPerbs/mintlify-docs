@@ -1,21 +1,72 @@
 ---
 title: "Authentication"
-description: "How the CLI finds and stores your API key"
+description: "How the CLI logs in and stores your API key"
 icon: "key"
 ---
 
-The CLI uses the same workspace API keys as the `/v1` REST API. Get one from **Settings → Workspaces → Your Workspace → API Keys**.
+The CLI authenticates with the same workspace API keys as the `/v1` REST API. The fastest way to get set up is the browser-based login flow — no copy-pasting keys.
 
-## Three ways to authenticate
+## Browser-based login (recommended)
 
-The CLI resolves credentials in this order — the first match wins:
+```bash
+geogen login
+```
+
+Here's what happens:
 
 <Steps>
-  <Step title="CLI flag (highest priority)">
+  <Step title="The CLI opens your browser">
+    A page on the GeoGen dashboard asks you to authorize the CLI. If you're not signed in, you'll be prompted to sign in first.
+  </Step>
+  <Step title="Pick a workspace">
+    The dashboard shows a workspace picker. The CLI will only get access to the workspace you select.
+  </Step>
+  <Step title="Click Authorize">
+    A new API key is minted with a label like `CLI: <your-device> (2026-05-22)` so you can identify and revoke it from **Settings → API Keys** later.
+  </Step>
+  <Step title="Done">
+    The dashboard hands the key back to the CLI through a temporary local listener (bound to `127.0.0.1` only). The CLI writes it to `~/.geogen/config.json` and the browser shows "✓ GeoGen CLI authorized".
+  </Step>
+</Steps>
+
+The flow times out after 5 minutes if you don't complete it.
+
+### Login flags
+
+| Flag | Description |
+|---|---|
+| `--api-key <key>` | Skip the browser flow and store this key directly (for scripts, CI, or when you already have a key). |
+| `--device <name>` | Override the device label used in the new key's name. Defaults to your machine's hostname. |
+| `--no-browser` | Start the local listener and print the auth URL, but don't try to open a browser. Useful over SSH or in containers — copy the URL to a browser on another machine. |
+| `--base-url <url>` | Override the API base URL (default: `https://api.geogen.io`). |
+| `--dashboard-url <url>` | Override the dashboard URL used for the consent page. By default it's derived from `--base-url`: `api.geogen.io` → `app.geogen.io`. |
+
+### Examples
+
+```bash
+# Default: browser flow
+geogen login
+
+# Scripts / CI — paste a pre-existing key, no browser needed
+geogen login --api-key wsk_your_api_key_here
+
+# Over SSH — get the URL, paste it into a browser on your laptop
+geogen login --no-browser
+
+# Custom device label (shows up in Settings → API Keys)
+geogen login --device "macbook-pro"
+```
+
+## Credential resolution order
+
+For any command (other than `login`), the CLI resolves credentials in this order — the first match wins:
+
+<Steps>
+  <Step title="CLI flag">
     ```bash
     geogen workspace --api-key wsk_your_api_key_here
     ```
-    Use this for one-off calls or when scripting against multiple workspaces.
+    Per-command override. Use it to run against a different workspace without changing anything else.
   </Step>
   <Step title="Environment variable">
     ```bash
@@ -23,27 +74,12 @@ The CLI resolves credentials in this order — the first match wins:
     export GEOGEN_BASE_URL=https://api.geogen.io   # optional
     geogen workspace
     ```
-    Best for CI/CD where you inject secrets at runtime.
+    Best for CI/CD secrets.
   </Step>
-  <Step title="Config file (default)">
-    ```bash
-    geogen login --api-key wsk_your_api_key_here
-    ```
-    Stores the key at `~/.geogen/config.json`. On POSIX, the file is locked down with `chmod 600`. Recommended for interactive desktop use.
+  <Step title="Config file">
+    The key written by `geogen login`, stored at `~/.geogen/config.json` (chmod 600 on POSIX).
   </Step>
 </Steps>
-
-## Login
-
-```bash
-geogen login --api-key wsk_your_api_key_here
-```
-
-Optional flags:
-
-| Flag | Description |
-|---|---|
-| `--base-url <url>` | Override the API base URL (default: `https://api.geogen.io`) |
 
 ## Logout
 
@@ -52,6 +88,8 @@ Clears the stored credentials:
 ```bash
 geogen logout
 ```
+
+This only removes the local copy. To fully revoke access, also delete the key from **Settings → API Keys** in the dashboard.
 
 ## Inspect resolved config
 
@@ -89,18 +127,35 @@ Never commit `~/.geogen/config.json` or your API key to source control. For CI p
 
 ## Multiple workspaces
 
-The CLI doesn't have built-in profile support yet, but you can run against any workspace by passing `--api-key` per command, or by switching the env var:
+Each `geogen login` mints a new API key bound to whichever workspace you pick on the consent screen. To switch which workspace the CLI talks to, you have two options:
 
 ```bash
-GEOGEN_API_KEY=wsk_prod_key geogen entities list
-GEOGEN_API_KEY=wsk_staging_key geogen entities list
+# Re-run login and pick a different workspace
+geogen login
+
+# Or pass a different key per command
+GEOGEN_API_KEY=wsk_other_workspace_key geogen entities list
 ```
+
+## Security notes
+
+The browser-based flow is designed so your API key never leaves your machine in plain text any longer than necessary:
+
+- The local HTTP listener binds to **`127.0.0.1` only** (not exposed on your network).
+- The listener accepts callbacks from **only the configured dashboard origin** (CORS-locked).
+- A **cryptographically random `state` token** is exchanged through the URL — any callback with the wrong state is rejected, defeating local-process impersonation.
+- The listener **shuts down immediately** after receiving the key, or after a 5-minute timeout.
+
+The API key itself is stored unencrypted in `~/.geogen/config.json` (chmod 600). If that's not acceptable for your environment, use `GEOGEN_API_KEY` env var injection from a secrets manager instead.
 
 ## Errors
 
 | Symptom | Likely cause |
 |---|---|
-| `No API key found.` | None of the three sources resolved a key. Run `geogen login`. |
-| `Invalid API key format` | The key was rejected by the server — check for typos or trailing whitespace. |
-| `API key is deactivated` | The key was revoked in the dashboard. Create a new one. |
-| `HTTP 401` | Same as the above two — verify the key against the dashboard. |
+| `Login timed out after 300s.` | Browser flow didn't complete within 5 minutes. Re-run `geogen login`. |
+| `Could not reach the CLI listener on your machine.` | The browser tab is using a stale port — the CLI process already exited. Re-run `geogen login`. |
+| `Callback state mismatch — refusing key.` | Another process tried to send a key to the listener. Very unusual; re-run `geogen login`. |
+| `Only workspace owners and admins can create API keys` | The dashboard requires owner/admin role to mint API keys. Ask a workspace owner. |
+| `Maximum of 5 API keys allowed per workspace.` | Delete stale `CLI: ...` keys in **Settings → API Keys**, then retry. |
+| `No API key found.` | None of the three credential sources resolved a key. Run `geogen login`. |
+| `Invalid API key format` / `HTTP 401` | Key was rejected by the server. Try `geogen login` again. |
